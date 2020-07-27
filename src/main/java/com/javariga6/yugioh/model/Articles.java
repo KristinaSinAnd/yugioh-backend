@@ -1,11 +1,14 @@
 package com.javariga6.yugioh.model;
 
-import javax.persistence.Column;
+import javax.persistence.*;
 
+@Entity(name = "articles")
 public class Articles {
-
+    @Id
     @Column(name = "id_articles")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @Column(name = "booster_set")
     private String boosterSet;
