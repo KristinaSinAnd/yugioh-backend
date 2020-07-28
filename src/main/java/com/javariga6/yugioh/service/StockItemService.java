@@ -16,4 +16,8 @@ public class StockItemService {
     public void delete(StockItem stockItem) {
         stockItemRepository.delete(stockItem);
     }
+
+    public void deleteById(Long id) {
+        stockItemRepository.deleteById(id);
+    }
 }

@@ -3,6 +3,7 @@ package com.javariga6.yugioh.service;
 import com.javariga6.yugioh.model.Article;
 import com.javariga6.yugioh.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
-    public List<Article> getAllArticle(){
+    public List<Article> getAllArticles(){
         return articleRepository.findAll();
     }
 

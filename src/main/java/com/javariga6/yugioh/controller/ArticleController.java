@@ -17,5 +17,16 @@ public class ArticleController {
         {
             return articleService.getArticleById(id);
         }
+    @PostMapping
+    public void save(@RequestBody Article article){
+        articleService.saveArticle(article);
+    }
+
+    @GetMapping("/delete/id/{id}")
+    public void deleteArticleById(@PathVariable Long id){
+        articleService.deleteById(id);
+    }
+
+
 
 }

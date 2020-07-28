@@ -2,7 +2,7 @@ package com.javariga6.yugioh.model;
 
 import javax.persistence.*;
 
-@Entity(name = "articles")
+@Entity(name = "article")
 public class Article {
     @Id
     @Column(name = "id_articles")
