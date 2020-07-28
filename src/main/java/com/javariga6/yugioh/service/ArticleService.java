@@ -26,5 +26,11 @@ public class ArticleService {
         return articleRepository.findByCardName(cardName);
     }
 
+    public void saveArticle(Article article){
+        articleRepository.save(article);
+    }
+    public void deleteById(Long id) {
+        articleRepository.deleteById(id);
+    }
 
 }
