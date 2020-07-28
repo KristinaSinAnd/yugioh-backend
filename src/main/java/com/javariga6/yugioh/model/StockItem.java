@@ -24,7 +24,7 @@ public class StockItem {
 
     @ManyToOne
     @JoinColumn(name = "id_articles")
-    private Articles articles;
+    private Article articles;
 
     public Long getId() { return id; }
 
@@ -46,9 +46,9 @@ public class StockItem {
 
     public void setCardStorage(CardStorage cardStorage) { this.cardStorage = cardStorage; }
 
-    public Articles getArticles() { return articles; }
+    public Article getArticles() { return articles; }
 
-    public void setArticles(Articles articles) { this.articles = articles; }
+    public void setArticles(Article articles) { this.articles = articles; }
 
     @Override
     public String toString() {
