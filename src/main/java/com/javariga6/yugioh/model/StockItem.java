@@ -23,8 +23,8 @@ public class StockItem {
     private CardStorage cardStorage;
 
     @ManyToOne
-    @JoinColumn(name = "id_articles")
-    private Articles articles;
+    @JoinColumn(name = "id_article")
+    private Article article;
 
     public Long getId() { return id; }
 
@@ -46,9 +46,9 @@ public class StockItem {
 
     public void setCardStorage(CardStorage cardStorage) { this.cardStorage = cardStorage; }
 
-    public Articles getArticles() { return articles; }
+    public Article getArticle() { return article; }
 
-    public void setArticles(Articles articles) { this.articles = articles; }
+    public void setArticle(Article article) { this.article = article; }
 
     @Override
     public String toString() {
@@ -58,7 +58,7 @@ public class StockItem {
                 ", cardValue='" + cardValue + '\'' +
                 ", inShop=" + inShop +
                 ", cardStorage=" + cardStorage +
-                ", articles=" + articles +
+                ", article=" + article +
                 '}';
     }
 }

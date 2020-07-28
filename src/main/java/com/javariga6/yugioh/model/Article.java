@@ -2,10 +2,10 @@ package com.javariga6.yugioh.model;
 
 import javax.persistence.*;
 
-@Entity(name = "articles")
-public class Articles {
+@Entity(name = "article")
+public class Article {
     @Id
-    @Column(name = "id_articles")
+    @Column(name = "id_article")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -75,7 +75,7 @@ public class Articles {
 
     @Override
     public String toString() {
-        return "Articles{" +
+        return "Article{" +
                 "id=" + id +
                 ", boosterSet='" + boosterSet + '\'' +
                 ", cardName='" + cardName + '\'' +
