@@ -18,6 +18,9 @@ public class StockItemController {
     @PostMapping("/delete")
     public void delete(@RequestBody StockItem stockItem) {stockItemService.delete(stockItem);}
 
+    @GetMapping("/delete/id/{id}")
+    public void deleteStockItemById(@PathVariable Long id){stockItemService.deleteById(id);}
+
 
 
 }
