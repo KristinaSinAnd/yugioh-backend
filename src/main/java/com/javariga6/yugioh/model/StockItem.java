@@ -10,7 +10,7 @@ public class StockItem {
     private Long id;
 
     @Column(name = "card_condition")
-    private  CardCondition cardCondition;
+    private CardCondition cardCondition;
 
     @Column(name = "card_value")
     private String cardValue;
@@ -30,9 +30,9 @@ public class StockItem {
 
     public void setId(Long id) { this.id = id; }
 
-    public String getCardCondition() { return cardCondition; }
+    public CardCondition getCardCondition() { return cardCondition; }
 
-    public void setCardCondition(String cardCondition) { this.cardCondition = cardCondition; }
+    public void setCardCondition(CardCondition cardCondition) { this.cardCondition = cardCondition; }
 
     public String getCardValue() { return cardValue; }
 
@@ -54,7 +54,7 @@ public class StockItem {
     public String toString() {
         return "StockItem{" +
                 "id=" + id +
-                ", cardCondition='" + cardCondition + '\'' +
+                ", cardCondition=" + cardCondition +
                 ", cardValue='" + cardValue + '\'' +
                 ", inShop=" + inShop +
                 ", cardStorage=" + cardStorage +
