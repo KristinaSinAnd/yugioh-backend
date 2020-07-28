@@ -13,5 +13,11 @@ public class StockItemController {
     public StockItemController(StockItemService stockItemService) { this.stockItemService = stockItemService; }
 
     @PostMapping
-    public void save(@RequestBody StockItem stockitem ){stockItemService.saveStockItem(stockitem);}
+    public void save(@RequestBody StockItem stockItem ){stockItemService.saveStockItem(stockItem);}
+
+    @PostMapping("/delete")
+    public void delete(@RequestBody StockItem stockItem) {stockItemService.delete(stockItem);}
+
+
+
 }

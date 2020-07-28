@@ -13,4 +13,7 @@ public class StockItemService {
     public void saveStockItem(StockItem stockItem) {stockItemRepository.save(stockItem);}
 
 
+    public void delete(StockItem stockItem) {
+        stockItemRepository.delete(stockItem);
+    }
 }
