@@ -23,7 +23,7 @@ public class User {
     private String email;
 
     @ManyToOne
-    @JoinColumn(name="id_roles", nullable=false)
+    @JoinColumn(name = "id_roles", nullable = false)
     private Role role;
 
     public Long getId() {
