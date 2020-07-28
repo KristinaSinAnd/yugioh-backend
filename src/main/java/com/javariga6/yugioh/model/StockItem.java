@@ -10,7 +10,7 @@ public class StockItem {
     private Long id;
 
     @Column(name = "card_condition")
-    private String cardCondition;
+    private  CardCondition cardCondition;
 
     @Column(name = "card_value")
     private String cardValue;
