@@ -25,5 +25,6 @@ public class StockItemService {
         return stockItemRepository.findAll();
     }
 
-    }
+    public void updateStockItem(StockItem stockItem) { stockItemRepository.save(stockItem); }
 }
+

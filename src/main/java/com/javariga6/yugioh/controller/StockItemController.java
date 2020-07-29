@@ -16,6 +16,9 @@ public class StockItemController {
     @PostMapping
     public void save(@RequestBody StockItem stockItem ){stockItemService.saveStockItem(stockItem);}
 
+    @PutMapping
+    public void update(@RequestBody StockItem stockItem){stockItemService.updateStockItem(stockItem);}
+
     @PostMapping("/delete")
     public void delete(@RequestBody StockItem stockItem) {stockItemService.delete(stockItem);}
 
