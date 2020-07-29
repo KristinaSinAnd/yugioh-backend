@@ -24,7 +24,7 @@ USE `yugioh` ;
 CREATE TABLE IF NOT EXISTS `yugioh`.`articles` (
   `id_articles` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `booster_set` VARCHAR(30) NOT NULL,
-  `card_name` VARCHAR(30) NOT NULL,
+  `card_name` VARCHAR(80) NOT NULL,
   `edition` VARCHAR(30) NOT NULL,
   `rarity` VARCHAR(30) NOT NULL,
   `card_type` VARCHAR(30) NOT NULL,
