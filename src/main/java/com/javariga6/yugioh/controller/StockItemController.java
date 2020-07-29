@@ -4,6 +4,7 @@ import com.javariga6.yugioh.model.StockItem;
 import com.javariga6.yugioh.service.StockItemService;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/stockitem")
 public class StockItemController {
@@ -18,6 +19,14 @@ public class StockItemController {
     @PostMapping("/delete")
     public void delete(@RequestBody StockItem stockItem) {stockItemService.delete(stockItem);}
 
+    @GetMapping ("/delete/id/{id}")
+    public void deleteStockItemById(@PathVariable Long id){ stockItemService.deleteStockItemById(id);}
+
+    @GetMapping("/get/id/{id}")
+    public void findStockItemById(@PathVariable Long id){ stockItemService.findStockItemById(id);}
+
+    @GetMapping("get/all")
+    public void findAllStockItems(@RequestBody StockItem stockItem){stockItemService.findAllStockItems();}
 
 
-}
+    }

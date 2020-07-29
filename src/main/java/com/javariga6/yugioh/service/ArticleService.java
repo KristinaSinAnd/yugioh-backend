@@ -33,4 +33,5 @@ public class ArticleService {
         articleRepository.deleteById(id);
     }
 
+    public List<Article> getArticleByBoosterSet(String boosterSet) {return articleRepository.findByBoosterSet(boosterSet); }
 }

@@ -21,8 +21,8 @@ public class Article {
     @Column
     private Rarity rarity;
 
-    @Column(name = "card_type")
-    private String cardType;
+    @Column
+    private CardType cardType;
 
     public Long getId() {
         return id;
@@ -64,13 +64,9 @@ public class Article {
         this.rarity = rarity;
     }
 
-    public String getCardType() {
-        return cardType;
-    }
+    public CardType getCardType() { return cardType; }
 
-    public void setCardType(String cardType) {
-        this.cardType = cardType;
-    }
+    public void setCardType(CardType cardType) { this.cardType = cardType;  }
 
     @Override
     public String toString() {
@@ -80,7 +76,7 @@ public class Article {
                 ", cardName='" + cardName + '\'' +
                 ", edition=" + edition +
                 ", rarity=" + rarity +
-                ", cardType='" + cardType + '\'' +
+                ", cardType=" + cardType +
                 '}';
     }
 }

@@ -9,4 +9,6 @@ public interface ArticleRepository extends
         JpaRepository <Article,Long> {
 
     List<Article> findByCardName(String cardName);
+
+   List<Article> findByBoosterSet(String boosterSet);
 }
