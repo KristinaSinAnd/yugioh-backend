@@ -30,5 +30,9 @@ public class ArticleController {
         articleService.deleteById(id);
     }
 
+    @GetMapping("get/all")
+    public void findAllArticles(@RequestBody Article article){articleService.findAllArticles();}
 
+    @PutMapping
+    public void update(@RequestBody Article article){articleService.updateArticle(article);}
 }
