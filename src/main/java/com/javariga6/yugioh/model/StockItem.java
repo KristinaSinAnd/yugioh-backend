@@ -26,29 +26,53 @@ public class StockItem {
     @JoinColumn(name = "id_article")
     private Article article;
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public CardCondition getCardCondition() { return cardCondition; }
+    public CardCondition getCardCondition() {
+        return cardCondition;
+    }
 
-    public void setCardCondition(CardCondition cardCondition) { this.cardCondition = cardCondition; }
+    public void setCardCondition(CardCondition cardCondition) {
+        this.cardCondition = cardCondition;
+    }
 
-    public String getCardValue() { return cardValue; }
+    public String getCardValue() {
+        return cardValue;
+    }
 
-    public void setCardValue(String cardValue) { this.cardValue = cardValue; }
+    public void setCardValue(String cardValue) {
+        this.cardValue = cardValue;
+    }
 
-    public boolean isInShop() { return inShop; }
+    public boolean isInShop() {
+        return inShop;
+    }
 
-    public void setInShop(boolean inShop) { this.inShop = inShop; }
+    public void setInShop(boolean inShop) {
+        this.inShop = inShop;
+    }
 
-    public CardStorage getCardStorage() { return cardStorage; }
+    public CardStorage getCardStorage() {
+        return cardStorage;
+    }
 
-    public void setCardStorage(CardStorage cardStorage) { this.cardStorage = cardStorage; }
+    public void setCardStorage(CardStorage cardStorage) {
+        this.cardStorage = cardStorage;
+    }
 
-    public Article getArticle() { return article; }
+    public Article getArticle() {
+        return article;
+    }
 
-    public void setArticle(Article article) { this.article = article; }
+    public void setArticle(Article article) {
+        this.article = article;
+    }
 
     @Override
     public String toString() {
