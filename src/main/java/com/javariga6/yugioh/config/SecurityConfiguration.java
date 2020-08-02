@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling().and().addFilter(jwtAuthFilterBean())
 
                 .authorizeRequests().antMatchers("/h2/**").permitAll() // permit all requests to H2 console, they are secured anyway
-                .antMatchers(HttpMethod.PUT, "/users").permitAll() // allow creation of users
+                .antMatchers(HttpMethod.POST, "/user/register").permitAll() // allow creation of users
                 .antMatchers(HttpMethod.POST, "/login").permitAll() // allow login for anonymous user
                 .anyRequest().authenticated(); // deny all other requests by default
     }

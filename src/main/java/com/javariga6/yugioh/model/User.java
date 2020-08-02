@@ -27,12 +27,27 @@ public class User implements UserDetails {
     private String email;
 
     @ManyToOne
-    @JoinColumn(name = "id_roles", nullable = false)
+    @JoinColumn(name = "role_id", nullable = false)
+    @Transient
     private Role role;
 
-    @JsonIgnore
+    @Column
+    private Long roleId;
+
     @Column(name = "password", nullable = false)
     private String password;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
 
     public Long getId() {
         return id;
@@ -102,21 +117,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
