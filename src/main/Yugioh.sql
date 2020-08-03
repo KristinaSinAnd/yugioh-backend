@@ -91,12 +91,12 @@ CREATE TABLE IF NOT EXISTS `yugioh`.`users` (
   `user_name` VARCHAR(30) NOT NULL,
   `user_surname` VARCHAR(30) NOT NULL,
   `user_email` VARCHAR(30) NOT NULL,
-  `id_roles` INT(10) UNSIGNED NULL DEFAULT NULL,
+  `role_id` INT(10) UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`id_users`),
   INDEX `id_roles` (`id_roles` ASC) VISIBLE,
   CONSTRAINT `users_ibfk_1`
-    FOREIGN KEY (`id_roles`)
-    REFERENCES `yugioh`.`roles` (`id_roles`))
+    FOREIGN KEY (`role_id`)
+    REFERENCES `yugioh`.`roles` (`role_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
