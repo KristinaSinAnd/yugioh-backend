@@ -28,26 +28,26 @@ public class User implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
-    @Transient
     private Role role;
 
-    @Column
-    private Long roleId;
+//    @Column
+//    private Long roleId;
 
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
+//    public Long getRoleId() {
+//        return roleId;
+//    }
+//
+//    public void setRoleId(Long roleId) {
+//        this.roleId = roleId;
+//    }
 
     public Long getId() {
         return id;
