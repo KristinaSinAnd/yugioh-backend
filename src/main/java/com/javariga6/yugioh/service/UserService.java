@@ -3,10 +3,10 @@ package com.javariga6.yugioh.service;
 import com.javariga6.yugioh.model.Role;
 import com.javariga6.yugioh.model.User;
 import com.javariga6.yugioh.model.UserTO;
+import com.javariga6.yugioh.repository.RoleRepository;
 import com.javariga6.yugioh.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -14,10 +14,12 @@ import java.util.List;
 public class UserService {
     final UserRepository userRepository;
     final PasswordEncoder passwordEncoder;
+    final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     public void saveUser(User user){
@@ -34,9 +36,16 @@ public class UserService {
                 passwordEncoder.encode(userTo.getPassword())
         );
         Role role = new Role();
-        role.setId(2L);
+        role.setId(1L);
         role.setRole("ROLE_USER");
-        user.setRole(role);
+        roleRepository.save(role);
+
+        Role role2 = new Role();
+        role2.setId(2L);
+        role2.setRole("ROLE_ADMINISTRATOR");
+        role2 = roleRepository.save(role2);
+
+        user.setRole(role2);
         userRepository.save(user);
     }
 
@@ -66,7 +75,6 @@ public class UserService {
     }
 
     public void updateUser(User user) {
-        System.out.println(user);
         User userFromRepo = userRepository.getOne(user.getId());
         userFromRepo.setName(user.getName());
         userFromRepo.setEmail(user.getEmail());
