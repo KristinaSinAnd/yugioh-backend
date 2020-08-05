@@ -1,6 +1,9 @@
 package com.javariga6.yugioh.controller;
 
 import com.javariga6.yugioh.model.Article;
+import com.javariga6.yugioh.model.CardType;
+import com.javariga6.yugioh.model.Edition;
+import com.javariga6.yugioh.model.Rarity;
 import com.javariga6.yugioh.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +15,13 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @GetMapping("/article/{id}")
+    @GetMapping("/id/{id}")
     public Article findById(@PathVariable Long id) {
+        System.out.println(articleService.getArticleById(id));
         return articleService.getArticleById(id);
     }
 
-    @GetMapping("/article/{booster_set}")
+    @GetMapping("/booster/{booster_set}")
     public Article findByBoosterSet(@PathVariable String boosterSet){return (Article) articleService.getArticleByBoosterSet(boosterSet);}
 
     @PostMapping
@@ -35,4 +39,5 @@ public class ArticleController {
 
     @PutMapping
     public void update(@RequestBody Article article){articleService.updateArticle(article);}
+
 }

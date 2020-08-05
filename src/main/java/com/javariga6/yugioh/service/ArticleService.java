@@ -19,7 +19,7 @@ public class ArticleService {
     }
 
     public Article getArticleById(Long id){
-        return articleRepository.getOne(id);
+        return articleRepository.findById(id).orElse(null);
     }
 
     public List<Article> getAllByCardName(String cardName){
