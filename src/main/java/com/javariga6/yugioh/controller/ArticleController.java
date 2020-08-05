@@ -8,6 +8,8 @@ import com.javariga6.yugioh.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/article")
 public class ArticleController {
@@ -35,10 +37,16 @@ public class ArticleController {
         articleService.deleteById(id);
     }
 
-    @GetMapping("get/all")
-    public void findAllArticles(@RequestBody Article article){articleService.findAllArticles();}
+    @GetMapping("/all")
+    public List<Article> findAllArticles(){
+        return articleService.findAllArticles();
+    }
 
     @PutMapping
     public void update(@RequestBody Article article){articleService.updateArticle(article);}
+
+    @PostMapping ("/delete")
+    public void delete (@RequestBody Article article) {articleService.deleteArticle(article);}
+
 
 }
