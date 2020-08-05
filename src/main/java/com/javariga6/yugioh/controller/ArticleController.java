@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/rest/Article.svc")
+@RequestMapping("/article")
 public class ArticleController {
 
     @Autowired
@@ -24,8 +24,9 @@ public class ArticleController {
     @GetMapping("/booster/{booster_set}")
     public Article findByBoosterSet(@PathVariable String boosterSet){return (Article) articleService.getArticleByBoosterSet(boosterSet);}
 
-    @PostMapping
+    @PostMapping ("/save")
     public void save(@RequestBody Article article) {
+        System.out.println(article);
         articleService.saveArticle(article);
     }
 
