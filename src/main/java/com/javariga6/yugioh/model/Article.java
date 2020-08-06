@@ -64,9 +64,13 @@ public class Article {
         this.rarity = rarity;
     }
 
-    public CardType getCardType() { return cardType; }
+    public CardType getCardType() {
+        return cardType;
+    }
 
-    public void setCardType(CardType cardType) { this.cardType = cardType;  }
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
+    }
 
     @Override
     public String toString() {

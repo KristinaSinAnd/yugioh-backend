@@ -6,6 +6,8 @@ import com.javariga6.yugioh.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -34,6 +36,19 @@ public class UserController {
 
     @GetMapping("/delete/email/{email}")
     public void deleteUserByEmail(@PathVariable String email){ userService.deleteByEmail(email); }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    public List<User> getAllUsers(){
+        return userService.getAll();
+    }
+
+    @PostMapping("/update")
+    public void update(@RequestBody User user){
+        this.userService.updateUser(user);
+    }
+
+
 
 
 }

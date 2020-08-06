@@ -4,6 +4,8 @@ import com.javariga6.yugioh.model.CardStorage;
 import com.javariga6.yugioh.repository.CardStorageRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CardStorageService {
     final CardStorageRepository cardStorageRepository;
@@ -30,6 +32,10 @@ public class CardStorageService {
 
     public void deleteCardStorageById(Long id) {
         cardStorageRepository.deleteById(id);
+    }
+
+    public List<CardStorage> getAll() {
+        return cardStorageRepository.findAll();
     }
 
 }
