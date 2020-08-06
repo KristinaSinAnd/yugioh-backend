@@ -2,15 +2,15 @@ package com.javariga6.yugioh.model;
 
 import javax.persistence.*;
 
-@Entity(name = "card_storage")
+@Entity
 public class CardStorage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_card_storage")
+    @Column
     private Long id;
 
-    @Column(name = "storage_name")
+    @Column
     private String storageName;
 
     public Long getId() {
