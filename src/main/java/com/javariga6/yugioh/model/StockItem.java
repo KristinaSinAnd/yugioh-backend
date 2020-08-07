@@ -1,6 +1,7 @@
 package com.javariga6.yugioh.model;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity(name = "stock_items")
 public class StockItem {
@@ -13,10 +14,16 @@ public class StockItem {
     private CardCondition cardCondition;
 
     @Column(name = "card_value")
-    private String cardValue;
+    private BigDecimal cardValue;
+
+    @Column(name = "card_value_when_sold")
+    private BigDecimal cardValueWhenSold;
 
     @Column(name = "in_shop")
-    private boolean inShop;
+    private Boolean inShop;
+
+    @Column(name = "comments")
+    private String comments;
 
     @ManyToOne
     @JoinColumn(name = "id_card_storage")
@@ -34,13 +41,37 @@ public class StockItem {
 
     public void setCardCondition(CardCondition cardCondition) { this.cardCondition = cardCondition; }
 
-    public String getCardValue() { return cardValue; }
+    public BigDecimal getCardValue() { return cardValue; }
 
-    public void setCardValue(String cardValue) { this.cardValue = cardValue; }
+    public void setCardValue(BigDecimal cardValue) { this.cardValue = cardValue; }
 
     public boolean isInShop() { return inShop; }
 
-    public void setInShop(boolean inShop) { this.inShop = inShop; }
+    public BigDecimal getCardValueWhenSold() {
+        return cardValueWhenSold;
+    }
+
+    public void setCardValueWhenSold(BigDecimal cardValueWhenSold) {
+        this.cardValueWhenSold = cardValueWhenSold;
+    }
+
+    public Boolean getInShop() {
+        return inShop;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public void setInShop(Boolean inShop) {
+        this.inShop = inShop;
+    }
+
+
 
     public CardStorage getCardStorage() { return cardStorage; }
 
@@ -55,8 +86,10 @@ public class StockItem {
         return "StockItem{" +
                 "id=" + id +
                 ", cardCondition=" + cardCondition +
-                ", cardValue='" + cardValue + '\'' +
+                ", cardValue=" + cardValue +
+                ", cardValueWhenSold=" + cardValueWhenSold +
                 ", inShop=" + inShop +
+                ", comments='" + comments + '\'' +
                 ", cardStorage=" + cardStorage +
                 ", article=" + article +
                 '}';
