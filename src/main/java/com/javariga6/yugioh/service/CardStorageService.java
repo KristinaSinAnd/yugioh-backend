@@ -35,6 +35,7 @@ public class CardStorageService {
     }
 
     public List<CardStorage> getAll() {
+        System.out.println(cardStorageRepository.findAll());
         return cardStorageRepository.findAll();
     }
 
