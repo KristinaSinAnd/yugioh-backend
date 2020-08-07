@@ -13,7 +13,7 @@ public class StockItemController {
 
     public StockItemController(StockItemService stockItemService) { this.stockItemService = stockItemService; }
 
-    @PostMapping
+    @PostMapping ("/save")
     public void save(@RequestBody StockItem stockItem ){stockItemService.saveStockItem(stockItem);}
 
     @PutMapping

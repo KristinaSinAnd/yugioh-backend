@@ -19,8 +19,7 @@ public class CardStorageController {
         this.cardStorageService = cardStorageService;
     }
 
-    @PostMapping
-    @RequestMapping("/create")
+    @PostMapping ("/create")
     public void save(@RequestBody CardStorage cardStorage) {
         cardStorageService.saveCardStorage(cardStorage);
     }
