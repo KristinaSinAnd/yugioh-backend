@@ -14,15 +14,18 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public void saveRole(Role role){
+    public void saveRole(Role role) {
         roleRepository.save(role);
     }
 
-    public Role getRoleById(Long id){
+    public Role getRoleById(Long id) {
         return roleRepository.getOne(id);
     }
 
-    public List<Role> getAll(){
+    public List<Role> getAll() {
         return roleRepository.findAll();
     }
+
+    public void deleteRole(Role role) {
+        roleRepository.delete(role); }
 }

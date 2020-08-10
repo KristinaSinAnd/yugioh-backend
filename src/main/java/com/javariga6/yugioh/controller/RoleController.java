@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.controller;
 
+import com.javariga6.yugioh.model.CardStorage;
 import com.javariga6.yugioh.model.Role;
 import com.javariga6.yugioh.service.RoleService;
 import org.springframework.web.bind.annotation.*;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("users/roles")
 public class RoleController {
     final RoleService roleService;
 
@@ -16,11 +17,12 @@ public class RoleController {
     }
 
     @PostMapping
+    @RequestMapping("/create")
     public void saveRole(@RequestBody Role role){
         roleService.saveRole(role);
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public List<Role> getAllRoles(){
         return roleService.getAll();
     }
@@ -28,5 +30,10 @@ public class RoleController {
     @GetMapping("/id/{id}")
     public Role getRoleById(@PathVariable Long id){
         return roleService.getRoleById(id);
+    }
+
+    @PostMapping("/delete")
+    public void delete(@RequestBody Role role) {
+        roleService.deleteRole(role);
     }
 }
