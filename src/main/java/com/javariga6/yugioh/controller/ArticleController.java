@@ -42,7 +42,7 @@ public class ArticleController {
         return articleService.findAllArticles();
     }
 
-    @PutMapping
+    @PutMapping ("/update")
     public void update(@RequestBody Article article){articleService.updateArticle(article);}
 
     @PostMapping ("/delete")
