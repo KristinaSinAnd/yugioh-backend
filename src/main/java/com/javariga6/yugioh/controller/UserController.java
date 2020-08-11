@@ -48,6 +48,11 @@ public class UserController {
         this.userService.updateUser(user);
     }
 
+    @PostMapping("/updatethis")
+    public void updateThis(@RequestBody UserTO userTO){
+        this.userService.updateThisUser(userTO);
+    }
+
 
 
 

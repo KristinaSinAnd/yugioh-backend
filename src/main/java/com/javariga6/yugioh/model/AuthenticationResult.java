@@ -4,8 +4,8 @@ public class AuthenticationResult {
 
     private String token;
 
-    public AuthenticationResult(final String generatedToken) {
-        this.token = generatedToken;
+    public AuthenticationResult(String token) {
+        this.token = token;
     }
 
     public String getToken() {
