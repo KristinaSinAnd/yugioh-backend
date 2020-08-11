@@ -15,11 +15,13 @@ public class UserService {
     final UserRepository userRepository;
     final PasswordEncoder passwordEncoder;
     final RoleRepository roleRepository;
+    final SecurityService securityService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, SecurityService securityService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.securityService = securityService;
     }
 
     public void saveUser(User user){
@@ -35,17 +37,16 @@ public class UserService {
         user.setPassword(
                 passwordEncoder.encode(userTo.getPassword())
         );
-        Role role = new Role();
-        role.setId(1L);
-        role.setRole("ROLE_USER");
-        roleRepository.save(role);
 
-        Role role2 = new Role();
-        role2.setId(2L);
-        role2.setRole("ROLE_ADMINISTRATOR");
-        role2 = roleRepository.save(role2);
 
-        user.setRole(role2);
+        Role role = roleRepository.getFirstByRole("ROLE_ADMINISTRATOR");    //TODO Change to user for prod
+        if(role == null){
+            role = new Role();
+            role.setRole("ROLE_ADMINISTRATOR");
+            roleRepository.save(role);
+        }
+
+        user.setRole(role);
         userRepository.save(user);
     }
 
@@ -80,5 +81,20 @@ public class UserService {
         userFromRepo.setEmail(user.getEmail());
         userFromRepo.setSurname(user.getSurname());
         userRepository.save(userFromRepo);
+    }
+
+    public void updateThisUser(UserTO userTO) {
+        User user = userRepository.getOne(securityService.getUserId());
+        user.setEmail(userTO.getEmail());
+        user.setName(userTO.getName());
+        user.setSurname(userTO.getSurname());
+        if (userTO.getPassword()!=null){
+            user.setPassword(
+                    passwordEncoder.encode(
+                            userTO.getPassword()
+                    )
+            );
+        }
+        userRepository.save(user);
     }
 }

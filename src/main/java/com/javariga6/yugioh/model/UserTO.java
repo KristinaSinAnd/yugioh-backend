@@ -39,4 +39,14 @@ public class UserTO {
     public void setPassword(final String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return "UserTO{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", surname='" + surname + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
