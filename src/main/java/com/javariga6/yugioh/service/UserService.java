@@ -1,14 +1,14 @@
 package com.javariga6.yugioh.service;
 
-import com.javariga6.yugioh.model.Role;
-import com.javariga6.yugioh.model.User;
-import com.javariga6.yugioh.model.UserTO;
+import com.javariga6.yugioh.model.*;
+import com.javariga6.yugioh.repository.PassRecoveryTokenRepository;
 import com.javariga6.yugioh.repository.RoleRepository;
 import com.javariga6.yugioh.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -16,20 +16,24 @@ public class UserService {
     final PasswordEncoder passwordEncoder;
     final RoleRepository roleRepository;
     final SecurityService securityService;
+    final EmailService emailService;
+    final PassRecoveryTokenRepository passRecoveryTokenRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, SecurityService securityService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, SecurityService securityService, EmailService emailService, PassRecoveryTokenRepository passRecoveryTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.securityService = securityService;
+        this.emailService = emailService;
+        this.passRecoveryTokenRepository = passRecoveryTokenRepository;
     }
 
-    public void saveUser(User user){
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 
 
-    public void saveUser(UserTO userTo){
+    public void saveUser(UserTO userTo) {
         User user = new User();
         user.setEmail(userTo.getEmail());
         user.setName(userTo.getName());
@@ -40,7 +44,7 @@ public class UserService {
 
 
         Role role = roleRepository.getFirstByRole("ROLE_ADMINISTRATOR");    //TODO Change to user for prod
-        if(role == null){
+        if (role == null) {
             role = new Role();
             role.setRole("ROLE_ADMINISTRATOR");
             roleRepository.save(role);
@@ -50,11 +54,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getUserById(Long id){
+    public User getUserById(Long id) {
         return userRepository.getOne(id);
     }
 
-    public User getUserByEmail(String email){
+    public User getUserByEmail(String email) {
         return userRepository.getFirstByEmail(email);
     }
 
@@ -88,7 +92,7 @@ public class UserService {
         user.setEmail(userTO.getEmail());
         user.setName(userTO.getName());
         user.setSurname(userTO.getSurname());
-        if (userTO.getPassword()!=null){
+        if (userTO.getPassword() != null) {
             user.setPassword(
                     passwordEncoder.encode(
                             userTO.getPassword()
@@ -96,5 +100,35 @@ public class UserService {
             );
         }
         userRepository.save(user);
+    }
+
+    public void sendRecoveryToken(PassResetRequest request) {
+        User user = userRepository.getFirstByEmail(request.getEmail());
+        if (user == null) return;
+        PassRecoveryToken token = passRecoveryTokenRepository.findFirstByUser(user);
+        if (token==null) {
+            token = new PassRecoveryToken();
+        }
+        String tokenStr = UUID.randomUUID().toString();
+        token.setToken(tokenStr);
+        token.setUser(user);
+        passRecoveryTokenRepository.save(token);
+        this.emailService.sendSimpleMessage(
+                request.getEmail(),
+                "Yugioh store password recovery",
+                request.getHost() + "/users/password/reset/" + tokenStr
+                );
+    }
+
+    public void passReset(ResetRequest request) {
+        PassRecoveryToken token = passRecoveryTokenRepository.findFirstByToken(
+                request.getTokenStr()
+        );
+        User user = token.getUser();
+        user.setPassword(
+                passwordEncoder.encode(request.getPassword())
+        );
+        userRepository.save(user);
+        passRecoveryTokenRepository.delete(token);
     }
 }
