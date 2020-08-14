@@ -1,6 +1,7 @@
 package com.javariga6.yugioh.service;
 
 import com.javariga6.yugioh.model.Article;
+import com.javariga6.yugioh.model.CardStorage;
 import com.javariga6.yugioh.model.StockItem;
 import com.javariga6.yugioh.repository.StockItemRepository;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import java.util.List;
 @Service
 public class StockItemService {
     final StockItemRepository stockItemRepository;
+
 
     public StockItemService(StockItemRepository stockItemRepository) { this.stockItemRepository = stockItemRepository; }
 
@@ -21,10 +23,14 @@ public class StockItemService {
 
     public void findStockItemById(Long id) { stockItemRepository.findById(id); }
 
+
     public List<StockItem> findAllStockItems(){
         return stockItemRepository.findAll();
     }
 
+
     public void updateStockItem(StockItem stockItem) { stockItemRepository.save(stockItem); }
+
+
 }
 
