@@ -1,6 +1,7 @@
 package com.javariga6.yugioh.controller;
 
 import com.javariga6.yugioh.model.AuthenticationResult;
+import com.javariga6.yugioh.model.Role;
 import com.javariga6.yugioh.model.User;
 import com.javariga6.yugioh.model.UserTO;
 import com.javariga6.yugioh.service.SecurityService;
@@ -46,6 +47,11 @@ public class AuthController {
         userTO.setEmail(user.getEmail());
         userTO.setName(user.getName());
         userTO.setSurname(user.getSurname());
+
+        Role role = new Role();
+        role.setRole(user.getRole().getRole());
+
+        userTO.setRole(role);
         return userTO;
     }
 }

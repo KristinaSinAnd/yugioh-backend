@@ -6,7 +6,15 @@ public class UserTO {
     private String password;
     private String surname;
     private String name;
+    private Role role;
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public String getSurname() {
         return surname;
@@ -47,6 +55,7 @@ public class UserTO {
                 ", password='" + password + '\'' +
                 ", surname='" + surname + '\'' +
                 ", name='" + name + '\'' +
+                ", role=" + role +
                 '}';
     }
 }
