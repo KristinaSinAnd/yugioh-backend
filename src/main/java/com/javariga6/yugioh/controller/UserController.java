@@ -1,5 +1,7 @@
 package com.javariga6.yugioh.controller;
 
+import com.javariga6.yugioh.model.PassResetRequest;
+import com.javariga6.yugioh.model.ResetRequest;
 import com.javariga6.yugioh.model.User;
 import com.javariga6.yugioh.model.UserTO;
 import com.javariga6.yugioh.service.UserService;
@@ -53,7 +55,15 @@ public class UserController {
         this.userService.updateThisUser(userTO);
     }
 
+    @PostMapping("/password/requesttoken")
+    public void passResetRequest(@RequestBody PassResetRequest request){
+        userService.sendRecoveryToken(request);
+    }
 
+    @PostMapping("/password/reset")
+    public void reset(@RequestBody ResetRequest request){
+        userService.passReset(request);
+    }
 
 
 }

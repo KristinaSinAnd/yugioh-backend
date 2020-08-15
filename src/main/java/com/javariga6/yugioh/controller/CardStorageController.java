@@ -49,4 +49,7 @@ public class CardStorageController {
     public List<CardStorage> getAllCardStorages(){
         return cardStorageService.getAll();
     }
+
+    @GetMapping("/get/stockitems/{id}")
+    public void findStockItemsByStorageId(@PathVariable Long id){cardStorageService.findCardStorageById(id);}
 }

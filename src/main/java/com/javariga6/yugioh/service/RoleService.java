@@ -1,6 +1,7 @@
 package com.javariga6.yugioh.service;
 
 import com.javariga6.yugioh.model.Role;
+import com.javariga6.yugioh.model.User;
 import com.javariga6.yugioh.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +28,13 @@ public class RoleService {
     }
 
     public void deleteRole(Role role) {
-        roleRepository.delete(role); }
+        roleRepository.delete(role);
+    }
+
+    public void updateRole(Role role) {
+        Role roleFromRepo = roleRepository.getOne(role.getId());
+        roleFromRepo.setRole(role.getRole());
+        roleRepository.save(roleFromRepo);
+    }
+
 }
