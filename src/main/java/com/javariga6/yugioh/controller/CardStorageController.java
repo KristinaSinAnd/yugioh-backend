@@ -29,7 +29,7 @@ public class CardStorageController {
         cardStorageService.findCardStorageById(id);
     }
 
-    @PutMapping
+    @PostMapping ("/update")
     public void update(@RequestBody CardStorage cardStorage) {
         cardStorageService.updateCardStorage(cardStorage);
     }
