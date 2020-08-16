@@ -22,10 +22,11 @@ public class StockItemController {
         stockItemService.saveStockItem(stockItem);
     }
 
-    @PutMapping
+    @PostMapping ("/update")
     public void update(@RequestBody StockItem stockItem) {
         stockItemService.updateStockItem(stockItem);
     }
+
 
     @PostMapping("/delete")
     public void delete(@RequestBody StockItem stockItem) {
