@@ -51,5 +51,6 @@ public class CardStorageController {
     }
 
     @GetMapping("/get/stockitems/{id}")
-    public void findStockItemsByStorageId(@PathVariable Long id){cardStorageService.findCardStorageById(id);}
+    public void findStockItemsByStorageId(@PathVariable Long id){cardStorageService.findCardStorageById(id);
+    }
 }
