@@ -39,4 +39,8 @@ public class CardStorageService {
         return cardStorageRepository.findAll();
     }
 
+    public CardStorage findByName(String name){
+        return cardStorageRepository.findFirstByStorageName(name);
+    }
+
 }

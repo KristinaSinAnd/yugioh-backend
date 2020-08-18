@@ -46,4 +46,13 @@ public class ArticleService {
 
     public void deleteArticle(Article article) {articleRepository.delete(article);
     }
+    public List<Article> findByArticle(Article article) {
+        return articleRepository.findAllByBoosterSetAndCardNameAndCardTypeAndEditionAndRarity(
+                article.getBoosterSet(),
+                article.getCardName(),
+                article.getCardType(),
+                article.getEdition(),
+                article.getRarity()
+        );
+    }
 }

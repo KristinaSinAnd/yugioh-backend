@@ -7,5 +7,6 @@ public enum CardCondition {
     GOOD,
     LIGHTLY_PLAYED,
     PLAYED,
-    POOR
+    POOR,
+    NM_EX
 }

@@ -22,5 +22,6 @@ public enum Rarity {
     UNKNOWN,
     TOKEN,
     OVERSIZED,
+    PRISMATIC
 
 }
