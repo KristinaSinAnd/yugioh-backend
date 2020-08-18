@@ -5,6 +5,7 @@ public enum Rarity {
     COMMON,
     RARE,
     SUPER_RARE,
+    BLACK_RARE,
     ULTRA_RARE,
     ULTIMATE_RARE,
     SECRET_RARE,
