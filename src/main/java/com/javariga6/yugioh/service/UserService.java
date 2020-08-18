@@ -6,6 +6,7 @@ import com.javariga6.yugioh.repository.RoleRepository;
 import com.javariga6.yugioh.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -54,8 +55,14 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public User getUserById(Long id) {
         return userRepository.getOne(id);
+    }
+
+    @Transactional
+    public Role getRole(Long id){
+        return userRepository.getOne(id).getRole();
     }
 
     public User getUserByEmail(String email) {

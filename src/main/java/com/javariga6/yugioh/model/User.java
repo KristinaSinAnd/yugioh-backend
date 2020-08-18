@@ -26,12 +26,9 @@ public class User implements UserDetails {
     @Column(unique = true, name = "user_email")
     private String email;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
-
-//    @Column
-//    private Long roleId;
 
     @Column(name = "password", nullable = false)
     @JsonIgnore
@@ -40,14 +37,6 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-
-//    public Long getRoleId() {
-//        return roleId;
-//    }
-//
-//    public void setRoleId(Long roleId) {
-//        this.roleId = roleId;
-//    }
 
     public Long getId() {
         return id;

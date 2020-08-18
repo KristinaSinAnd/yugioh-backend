@@ -3,12 +3,18 @@ package com.javariga6.yugioh.filter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.javariga6.yugioh.model.Role;
+import com.javariga6.yugioh.model.User;
+import com.javariga6.yugioh.service.RoleService;
+import com.javariga6.yugioh.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +28,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 public class JwtAuthFilter extends BasicAuthenticationFilter {
-
+    @Autowired
+    private UserService userService;
     private static final String HEADER = "Authorization";
     private static final String PREFIX = "Bearer ";
 
@@ -55,7 +62,11 @@ public class JwtAuthFilter extends BasicAuthenticationFilter {
         }
 
         Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR"));
+        Role role = userService.getRole(Long.parseLong(claims.getSubject()));
+
+        authorities.add(new SimpleGrantedAuthority(
+                role.getRole()
+        ));
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(claims.getSubject(), null, authorities);
 

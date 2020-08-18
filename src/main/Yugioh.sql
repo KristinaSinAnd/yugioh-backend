@@ -110,3 +110,25 @@ COLLATE = utf8mb4_0900_ai_ci;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+CREATE VIEW v_article
+		(
+		 id_articles,
+         booster_set,
+		 card_name,
+		 card_type,
+         edition,
+         rarity,
+         card_count
+		)
+AS
+	SELECT
+		a.id_articles,
+		a.booster_set,
+        a.card_name,
+        a.card_type,
+        a.edition,
+        a.rarity,
+		COUNT(s.id_stock_items)
+	FROM article a
+	      LEFT JOIN stock_items s ON a.id_articles = s.id_article
+	GROUP BY a.id_articles;
