@@ -132,3 +132,36 @@ AS
 	FROM article a
 	      LEFT JOIN stock_items s ON a.id_articles = s.id_article
 	GROUP BY a.id_articles;
+
+CREATE VIEW v_stock_item(
+id_stock_items,
+card_condition,
+card_value,
+card_value_when_sold,
+comments,
+in_shop,
+id,
+storage_name,
+id_articles,
+booster_set,
+card_name,
+card_type,
+edition,
+rarity) AS SELECT
+s.id_stock_items,
+s.card_condition,
+s.card_value,
+s.card_value_when_sold,
+s.comments,
+s.in_shop,
+c.id,
+c.storage_name,
+a.id_articles,
+a.booster_set,
+a.card_name,
+a.card_type,
+a.edition,
+a.rarity
+FROM stock_items s
+	      LEFT JOIN card_storage c ON c.id = s.id_card_storage
+          LEFT JOIN article a ON a.id_articles = s.id_article
