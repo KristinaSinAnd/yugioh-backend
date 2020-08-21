@@ -6,6 +6,7 @@ import com.javariga6.yugioh.service.CardStorageService;
 import com.javariga6.yugioh.service.StockItemService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,7 @@ public class CsvController {
     }
 
     @GetMapping("import/art")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public boolean importCsv() throws IOException {
         Resource resource = new ClassPathResource("/static/articles.csv");
         File file = resource.getFile();
@@ -63,6 +65,7 @@ public class CsvController {
         return true;
     }
     @GetMapping("import/itm")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public boolean importCsv2() throws IOException {
 
         Resource resource = new ClassPathResource("/static/items.csv");

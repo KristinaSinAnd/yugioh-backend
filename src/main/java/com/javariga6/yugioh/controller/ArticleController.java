@@ -6,6 +6,7 @@ import com.javariga6.yugioh.model.Edition;
 import com.javariga6.yugioh.model.Rarity;
 import com.javariga6.yugioh.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +28,14 @@ public class ArticleController {
     public Article findByBoosterSet(@PathVariable String boosterSet){return (Article) articleService.getArticleByBoosterSet(boosterSet);}
 
     @PostMapping ("/save")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void save(@RequestBody Article article) {
         System.out.println(article);
         articleService.saveArticle(article);
     }
 
     @GetMapping("/delete/id/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void deleteArticleById(@PathVariable Long id) {
         articleService.deleteById(id);
     }
@@ -43,9 +46,11 @@ public class ArticleController {
     }
 
     @PostMapping ("/update")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void update(@RequestBody Article article){articleService.updateArticle(article);}
 
     @PostMapping ("/delete")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void delete (@RequestBody Article article) {articleService.deleteArticle(article);}
 
 

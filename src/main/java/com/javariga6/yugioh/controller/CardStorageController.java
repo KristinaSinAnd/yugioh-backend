@@ -20,6 +20,7 @@ public class CardStorageController {
     }
 
     @PostMapping ("/create")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void save(@RequestBody CardStorage cardStorage) {
         cardStorageService.saveCardStorage(cardStorage);
     }
@@ -30,22 +31,24 @@ public class CardStorageController {
     }
 
     @PostMapping ("/update")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void update(@RequestBody CardStorage cardStorage) {
         cardStorageService.updateCardStorage(cardStorage);
     }
 
     @PostMapping("/delete")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void delete(@RequestBody CardStorage cardStorage) {
         cardStorageService.delete(cardStorage);
     }
 
     @GetMapping("/delete/id/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void deleteCardStorageById(@PathVariable Long id) {
         cardStorageService.deleteCardStorageById(id);
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public List<CardStorage> getAllCardStorages(){
         return cardStorageService.getAll();
     }

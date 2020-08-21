@@ -24,6 +24,7 @@ public class UserController {
     public void save(@RequestBody UserTO user){ userService.saveUser(user); }
 
     @PostMapping("/delete")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void delete(@RequestBody User user){ userService.delete(user); }
 
     @GetMapping("/get/id/{id}")
@@ -31,12 +32,15 @@ public class UserController {
     public User getUserById(@PathVariable Long id){ return userService.getUserById(id); }
 
     @GetMapping("/get/email/{email}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public User getUserByEmail(@PathVariable String email){ return userService.getUserByEmail(email); }
 
     @GetMapping("/delete/id/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void deleteUserById(@PathVariable Long id){ userService.deleteById(id); }
 
     @GetMapping("/delete/email/{email}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void deleteUserByEmail(@PathVariable String email){ userService.deleteByEmail(email); }
 
     @GetMapping("/all")
@@ -46,6 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void update(@RequestBody User user){
         this.userService.updateUser(user);
     }
