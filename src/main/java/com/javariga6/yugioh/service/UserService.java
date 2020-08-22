@@ -44,10 +44,10 @@ public class UserService {
         );
 
 
-        Role role = roleRepository.getFirstByRole("ROLE_ADMINISTRATOR");    //TODO Change to user for prod
+        Role role = roleRepository.getFirstByRole("ROLE_USER");    //TODO Change to user for prod
         if (role == null) {
             role = new Role();
-            role.setRole("ROLE_ADMINISTRATOR");
+            role.setRole("ROLE_USER");
             roleRepository.save(role);
         }
 
