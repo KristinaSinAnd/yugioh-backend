@@ -5,6 +5,7 @@ import com.javariga6.yugioh.model.ResetRequest;
 import com.javariga6.yugioh.model.User;
 import com.javariga6.yugioh.model.UserTO;
 import com.javariga6.yugioh.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,11 +22,26 @@ public class UserController {
 
     @PostMapping
     @RequestMapping("/register")
-    public void save(@RequestBody UserTO user){ userService.saveUser(user); }
+    public ResponseEntity save(@RequestBody UserTO user){
+        if(userService.getUserByEmail(user.getEmail()) == null) {
+            userService.saveUser(user);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/delete")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void delete(@RequestBody User user){ userService.delete(user); }
+    public ResponseEntity delete(@RequestBody User user){
+        if(userService.getUserByEmail(user.getEmail())!= null){
+            userService.delete(user);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
+        }
 
     @GetMapping("/get/id/{id}")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")

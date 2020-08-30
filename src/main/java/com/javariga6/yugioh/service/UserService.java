@@ -79,7 +79,10 @@ public class UserService {
     }
 
     public void delete(User user) {
-        userRepository.delete(user);
+
+        userRepository.delete(
+                userRepository.getFirstByEmail(user.getEmail())
+        );
     }
 
     public List<User> getAll() {
