@@ -2,6 +2,7 @@ package com.javariga6.yugioh.controller;
 
 import com.javariga6.yugioh.model.StockItem;
 import com.javariga6.yugioh.service.StockItemService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +27,9 @@ public class StockItemController {
 
     @PostMapping ("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void update(@RequestBody StockItem stockItem) {
-        stockItemService.updateStockItem(stockItem);
+    @ResponseStatus(HttpStatus.OK)
+    public StockItem update(@RequestBody StockItem stockItem) {
+        return stockItemService.updateStockItem(stockItem);
     }
 
 

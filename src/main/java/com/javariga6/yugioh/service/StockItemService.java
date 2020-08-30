@@ -1,9 +1,11 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.Article;
 import com.javariga6.yugioh.model.CardStorage;
 import com.javariga6.yugioh.model.StockItem;
 import com.javariga6.yugioh.repository.StockItemRepository;
+import com.sun.istack.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +31,13 @@ public class StockItemService {
     }
 
 
-    public void updateStockItem(StockItem stockItem) { stockItemRepository.save(stockItem); }
+    public StockItem updateStockItem(@NotNull StockItem stockItem) {
+        StockItem stockItemOriginal = stockItemRepository
+                .findById(stockItem.getId())
+                .orElseThrow(ResourceNotFoundException::new);
+        stockItem.setArticle(stockItemOriginal.getArticle());
+        return stockItemRepository.save(stockItem);
+    }
 
 
 }
