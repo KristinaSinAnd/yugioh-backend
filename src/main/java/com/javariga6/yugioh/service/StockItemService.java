@@ -42,15 +42,12 @@ public class StockItemService {
     public void delete(StockItem stockItem) {
         StockItem stockItemToDelete = stockItemRepository.findById(stockItem.getId())
                 .orElseThrow(ResourceNotFoundException::new);
-        stockItemRepository.delete(stockItem);
-    }
-
-    public void deleteStockItemById(Long id) {
-        stockItemRepository.deleteById(id);
+        stockItemRepository.delete(stockItemToDelete);
     }
 
     public void findStockItemById(Long id) {
-        stockItemRepository.findById(id);
+        stockItemRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
 

@@ -20,6 +20,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -154,7 +155,7 @@ class StockItemControllerTest {
         mockMvc.perform(post("/stockitem/delete")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(stockItemToDelete))
+                .content(objectMapper.writeValueAsString(stockItem1))
         )
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful())
@@ -183,7 +184,37 @@ class StockItemControllerTest {
     }
 
     @Test
-    void findStockItemById() {
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void findStockItemById() throws Exception {
+        StockItem stockItem1 = new StockItem();
+        stockItem1.setArticle(testArticle);
+        stockItem1.setCardStorage(testCardStorage);
+        StockItem stockItem2 = new StockItem();
+        stockItem2.setArticle(testArticle);
+        stockItem2.setCardStorage(testCardStorage);
+        StockItem stockItem3 = new StockItem();
+        stockItem3.setArticle(testArticle);
+        stockItem3.setCardStorage(testCardStorage);
+        stockItemRepository.save(stockItem1);
+        stockItemRepository.save(stockItem2);
+        stockItemRepository.save(stockItem3);
+
+        mockMvc.perform(get ("/stockitem/get/id/"+stockItem1.getId())
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+//        Bad request, no such id in db
+        mockMvc.perform(get ("/stockitem/get/id/999")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
 
     }
 }
