@@ -21,8 +21,8 @@ public class StockItemController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void save(@RequestBody StockItem stockItem) {
-        stockItemService.saveStockItem(stockItem);
+    public StockItem save(@RequestBody StockItem stockItem) {
+        return stockItemService.saveStockItem(stockItem);
     }
 
     @PostMapping ("/update")

@@ -13,6 +13,13 @@ public class CardStorage {
     @Column
     private String storageName;
 
+    public CardStorage() {
+    }
+
+    public CardStorage(String storageName) {
+        this.storageName = storageName;
+    }
+
     public Long getId() {
         return id;
     }

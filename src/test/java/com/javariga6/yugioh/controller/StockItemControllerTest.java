@@ -1,8 +1,14 @@
 package com.javariga6.yugioh.controller;
 
+import com.javariga6.yugioh.model.Article;
+import com.javariga6.yugioh.model.CardCondition;
+import com.javariga6.yugioh.model.CardStorage;
 import com.javariga6.yugioh.model.StockItem;
+import com.javariga6.yugioh.repository.ArticleRepository;
+import com.javariga6.yugioh.repository.CardStorageRepository;
 import com.javariga6.yugioh.repository.StockItemRepository;
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -30,20 +36,37 @@ class StockItemControllerTest {
     @Autowired
     private StockItemRepository stockItemRepository;
 
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private CardStorageRepository cardStorageRepository;
+
+    private static final String testStringName = "Test name";
+    public   Article testArticle;
+    public CardStorage testCardStorage;
+
+    @Before
+    public void before(){
+        stockItemRepository.deleteAll();
+        testArticle = articleRepository.save(new Article(testStringName));
+        testCardStorage = cardStorageRepository.save(new CardStorage(testStringName));
+    }
+
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR"})
     void update() throws Exception {
         StockItem stockItem = new StockItem();
         stockItem.setId(1L);
-        stockItem.setComments("Original comment");
+        stockItem.setComments(testStringName);
         stockItemRepository.save(stockItem);
 
         JSONObject itemWithExistingId = new JSONObject()
-                .put("id", "1")
-                .put("comments", "New comment");
+                .put("id", 1)
+                .put("comments", testStringName);
 
         JSONObject itemWithNoneExistingId = new JSONObject()
-                .put("id", "2");
+                .put("id", 2);
 
         mockMvc.perform(post("/stockitem/update")
                 .contentType(APPLICATION_JSON)
@@ -52,7 +75,7 @@ class StockItemControllerTest {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json("{'comments':'New comment'}"))
+                .andExpect(content().json(itemWithExistingId.toString()))
                 .andReturn().getResponse().getContentAsString();
 
         mockMvc.perform(post("/stockitem/update")
@@ -64,4 +87,28 @@ class StockItemControllerTest {
                 .andExpect(status().is(404))
                 .andReturn().getResponse().getContentAsString();
     }
+
+    @Test
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void save() throws Exception{
+
+        JSONObject itemToSave = new JSONObject()
+                .put("cardCondition", CardCondition.EXCELLENT)
+                .put("cardValue", 1.5)
+                .put("inShop", true)
+                .put("comments", "Test comment")
+                .put("cardStorage", testCardStorage)
+                .put("article", testArticle);
+
+        mockMvc.perform(post("/stockitem/create")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(itemToSave.toString())
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(itemToSave.toString()))
+                .andReturn().getResponse().getContentAsString();
+    }
+
 }

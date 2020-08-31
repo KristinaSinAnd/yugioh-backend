@@ -17,7 +17,9 @@ public class StockItemService {
 
     public StockItemService(StockItemRepository stockItemRepository) { this.stockItemRepository = stockItemRepository; }
 
-    public void saveStockItem(StockItem stockItem) { stockItemRepository.save(stockItem);}
+    public StockItem saveStockItem(StockItem stockItem) {
+        return stockItemRepository.save(stockItem);
+    }
 
     public void delete(StockItem stockItem) { stockItemRepository.delete(stockItem); }
 

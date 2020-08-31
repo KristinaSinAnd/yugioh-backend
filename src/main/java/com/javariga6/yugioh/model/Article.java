@@ -83,4 +83,12 @@ public class Article {
                 ", cardType=" + cardType +
                 '}';
     }
+
+    public Article() {
+    }
+
+    public Article(String cardName) {
+        this.cardName = cardName;
+    }
+
 }

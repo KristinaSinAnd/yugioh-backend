@@ -25,11 +25,11 @@ public class StockItem {
     @Column(name = "comments")
     private String comments;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_card_storage")
     private CardStorage cardStorage;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_article")
     private Article article;
 
