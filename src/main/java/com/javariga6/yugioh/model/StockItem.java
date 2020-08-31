@@ -1,6 +1,11 @@
 package com.javariga6.yugioh.model;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 
 @Entity(name = "stock_items")
@@ -25,12 +30,14 @@ public class StockItem {
     @Column(name = "comments")
     private String comments;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_card_storage")
+
     private CardStorage cardStorage;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_article")
+
     private Article article;
 
     public Long getId() { return id; }

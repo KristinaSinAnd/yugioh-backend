@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.exceptions;
 
+import org.hibernate.TransientPropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,4 +16,14 @@ public class ApiExceptionHandler {
                         "Resource not found!");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ReferencedResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleApiException(
+            ReferencedResourceNotFoundException ex) {
+        ErrorResponse response =
+                new ErrorResponse("error-0002",
+                        "Bad Request!");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }

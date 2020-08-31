@@ -1,18 +1,30 @@
 package com.javariga6.yugioh.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity(name = "article")
 public class Article {
+    public Article() {
+    }
+    public Article(String cardName, String boosterSet) {
+        this.cardName = cardName;
+        this.boosterSet = boosterSet;
+    }
+
+
+
     @Id
     @Column(name = "id_articles")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "booster_set")
+    @NotBlank
     private String boosterSet;
 
     @Column(name = "card_name")
+    @NotBlank
     private String cardName;
 
     @Column
@@ -83,12 +95,4 @@ public class Article {
                 ", cardType=" + cardType +
                 '}';
     }
-
-    public Article() {
-    }
-
-    public Article(String cardName) {
-        this.cardName = cardName;
-    }
-
 }

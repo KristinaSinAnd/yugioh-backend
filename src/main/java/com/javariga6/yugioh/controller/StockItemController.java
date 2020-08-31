@@ -4,8 +4,12 @@ import com.javariga6.yugioh.model.StockItem;
 import com.javariga6.yugioh.service.StockItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -21,7 +25,8 @@ public class StockItemController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public StockItem save(@RequestBody StockItem stockItem) {
+    public StockItem save(@RequestBody @Valid StockItem stockItem) {
+        System.out.println(stockItem);
         return stockItemService.saveStockItem(stockItem);
     }
 

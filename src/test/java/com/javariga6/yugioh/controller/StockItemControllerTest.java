@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javariga6.yugioh.model.Article;
 import com.javariga6.yugioh.model.CardCondition;
 import com.javariga6.yugioh.model.CardStorage;
@@ -9,8 +10,11 @@ import com.javariga6.yugioh.repository.CardStorageRepository;
 import com.javariga6.yugioh.repository.StockItemRepository;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,8 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-
-
 @ExtendWith(MockitoExtension.class)
 class StockItemControllerTest {
     @Autowired
@@ -42,15 +44,18 @@ class StockItemControllerTest {
     @Autowired
     private CardStorageRepository cardStorageRepository;
 
-    private static final String testStringName = "Test name";
+    private static String testStringName = "Test name";
     public   Article testArticle;
     public CardStorage testCardStorage;
+    public ObjectMapper objectMapper;
 
-    @Before
+
+    @BeforeEach
     public void before(){
         stockItemRepository.deleteAll();
-        testArticle = articleRepository.save(new Article(testStringName));
+        testArticle = articleRepository.save(new Article(testStringName, testStringName));
         testCardStorage = cardStorageRepository.save(new CardStorage(testStringName));
+        objectMapper = new ObjectMapper();
     }
 
     @Test
@@ -92,23 +97,34 @@ class StockItemControllerTest {
     @WithMockUser(roles = {"ADMINISTRATOR"})
     void save() throws Exception{
 
-        JSONObject itemToSave = new JSONObject()
-                .put("cardCondition", CardCondition.EXCELLENT)
-                .put("cardValue", 1.5)
-                .put("inShop", true)
-                .put("comments", "Test comment")
-                .put("cardStorage", testCardStorage)
-                .put("article", testArticle);
+        StockItem stockItem = new StockItem();
+        stockItem.setArticle(testArticle);
+        stockItem.setCardStorage(testCardStorage);
 
         mockMvc.perform(post("/stockitem/create")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(itemToSave.toString())
+                .content(objectMapper.writeValueAsString(stockItem))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(itemToSave.toString()))
+                .andReturn().getResponse().getContentAsString();
+
+        CardStorage cardStorageNotInDb = new CardStorage();
+        cardStorageNotInDb.setId(999L);
+        stockItem.setCardStorage(cardStorageNotInDb);
+
+//        Bad request. cardStorage in stockItem objects in not in database.
+        mockMvc.perform(post("/stockitem/create")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(stockItem))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json("{'error':'error-0002'}"))
                 .andReturn().getResponse().getContentAsString();
     }
+
 
 }

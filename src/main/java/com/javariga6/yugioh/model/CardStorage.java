@@ -1,6 +1,7 @@
 package com.javariga6.yugioh.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class CardStorage {
@@ -11,6 +12,7 @@ public class CardStorage {
     private Long id;
 
     @Column
+    @NotBlank
     private String storageName;
 
     public CardStorage() {
