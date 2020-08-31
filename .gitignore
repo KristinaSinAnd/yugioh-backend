@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 
 src/main/resources/application-production.properties
+src/test/resources/application-production.properties
 
 ### STS ###
 .apt_generated
