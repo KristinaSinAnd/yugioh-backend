@@ -40,6 +40,8 @@ public class StockItemService {
 
 
     public void delete(StockItem stockItem) {
+        StockItem stockItemToDelete = stockItemRepository.findById(stockItem.getId())
+                .orElseThrow(ResourceNotFoundException::new);
         stockItemRepository.delete(stockItem);
     }
 
@@ -61,7 +63,10 @@ public class StockItemService {
         StockItem stockItemOriginal = stockItemRepository
                 .findById(stockItem.getId())
                 .orElseThrow(ResourceNotFoundException::new);
+        CardStorage cardStorage = cardStorageRepository.findById(stockItem.getCardStorage().getId())
+                .orElseThrow(ReferencedResourceNotFoundException::new);
         stockItem.setArticle(stockItemOriginal.getArticle());
+        stockItem.setCardStorage(cardStorage);
         return stockItemRepository.save(stockItem);
     }
 

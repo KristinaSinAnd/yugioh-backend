@@ -33,22 +33,22 @@ public class StockItemController {
     @PostMapping ("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     @ResponseStatus(HttpStatus.OK)
-    public StockItem update(@RequestBody StockItem stockItem) {
+    public StockItem update(@RequestBody @Valid StockItem stockItem) {
         return stockItemService.updateStockItem(stockItem);
     }
 
 
     @PostMapping("/delete")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void delete(@RequestBody StockItem stockItem) {
+    public void delete(@RequestBody @Valid StockItem stockItem) {
         stockItemService.delete(stockItem);
     }
 
-    @GetMapping("/delete/id/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void deleteStockItemById(@PathVariable Long id) {
-        stockItemService.deleteStockItemById(id);
-    }
+//    @GetMapping("/delete/id/{id}")
+//    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+//    public void deleteStockItemById(@PathVariable Long id) {
+//        stockItemService.deleteStockItemById(id);
+//    }
 
     @GetMapping("/get/id/{id}")
     public void findStockItemById(@PathVariable Long id) {

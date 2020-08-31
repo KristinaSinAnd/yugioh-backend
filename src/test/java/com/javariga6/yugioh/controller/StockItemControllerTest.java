@@ -2,19 +2,16 @@ package com.javariga6.yugioh.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javariga6.yugioh.model.Article;
-import com.javariga6.yugioh.model.CardCondition;
 import com.javariga6.yugioh.model.CardStorage;
 import com.javariga6.yugioh.model.StockItem;
 import com.javariga6.yugioh.repository.ArticleRepository;
 import com.javariga6.yugioh.repository.CardStorageRepository;
 import com.javariga6.yugioh.repository.StockItemRepository;
 import org.json.JSONObject;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -63,30 +60,33 @@ class StockItemControllerTest {
     void update() throws Exception {
         StockItem stockItem = new StockItem();
         stockItem.setId(1L);
+        stockItem.setArticle(testArticle);
+        stockItem.setCardStorage(testCardStorage);
         stockItem.setComments(testStringName);
-        stockItemRepository.save(stockItem);
+        stockItem = stockItemRepository.save(stockItem);
+        stockItem.setComments("new comment");
 
-        JSONObject itemWithExistingId = new JSONObject()
-                .put("id", 1)
-                .put("comments", testStringName);
 
-        JSONObject itemWithNoneExistingId = new JSONObject()
-                .put("id", 2);
+        StockItem stockItemNotInDataBase = new StockItem();
+        stockItemNotInDataBase.setArticle(testArticle);
+        stockItemNotInDataBase.setCardStorage(testCardStorage);
+        stockItemNotInDataBase.setComments(testStringName);
+        stockItemNotInDataBase.setId(999L);
 
         mockMvc.perform(post("/stockitem/update")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(itemWithExistingId.toString())
+                .content(objectMapper.writeValueAsString(stockItem))
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(itemWithExistingId.toString()))
+                .andExpect(content().json(objectMapper.writeValueAsString(stockItem)))
                 .andReturn().getResponse().getContentAsString();
 
         mockMvc.perform(post("/stockitem/update")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(itemWithNoneExistingId.toString())
+                .content(objectMapper.writeValueAsString(stockItemNotInDataBase))
         )
                 .andDo(print())
                 .andExpect(status().is(404))
@@ -123,8 +123,67 @@ class StockItemControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{'error':'error-0002'}"))
-                .andReturn().getResponse().getContentAsString();
+                .andReturn();
     }
 
 
+    @Test
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void delete() throws Exception {
+        StockItem stockItem1 = new StockItem();
+        stockItem1.setArticle(testArticle);
+        stockItem1.setCardStorage(testCardStorage);
+        StockItem stockItem2 = new StockItem();
+        stockItem2.setArticle(testArticle);
+        stockItem2.setCardStorage(testCardStorage);
+        StockItem stockItem3 = new StockItem();
+        stockItem3.setArticle(testArticle);
+        stockItem3.setCardStorage(testCardStorage);
+        stockItemRepository.save(stockItem1);
+        stockItemRepository.save(stockItem2);
+        stockItemRepository.save(stockItem3);
+
+        Assert.assertEquals(3, stockItemRepository.findAll().size());
+
+        StockItem stockItemToDelete = new StockItem();
+        stockItemToDelete.setArticle(testArticle);
+        stockItemToDelete.setCardStorage(testCardStorage);
+        stockItemToDelete.setComments("item 1");
+        stockItemToDelete.setId(1L);
+
+        mockMvc.perform(post("/stockitem/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(stockItemToDelete))
+        )
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        Assert.assertEquals(stockItemRepository.findAll().size(), 2);
+
+//        Bad request, empty object
+        mockMvc.perform(post("/stockitem/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new StockItem()))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        mockMvc.perform(post("/stockitem/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(stockItemToDelete))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    void findStockItemById() {
+
+    }
 }

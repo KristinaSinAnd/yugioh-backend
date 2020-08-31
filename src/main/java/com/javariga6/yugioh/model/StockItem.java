@@ -1,11 +1,7 @@
 package com.javariga6.yugioh.model;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity(name = "stock_items")
@@ -32,12 +28,12 @@ public class StockItem {
 
     @ManyToOne
     @JoinColumn(name = "id_card_storage")
-
+    @NotNull
     private CardStorage cardStorage;
 
     @ManyToOne
     @JoinColumn(name = "id_article")
-
+    @NotNull
     private Article article;
 
     public Long getId() { return id; }
@@ -77,8 +73,6 @@ public class StockItem {
     public void setInShop(Boolean inShop) {
         this.inShop = inShop;
     }
-
-
 
     public CardStorage getCardStorage() { return cardStorage; }
 
