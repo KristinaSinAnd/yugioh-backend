@@ -20,7 +20,6 @@ public class ArticleController {
 
     @GetMapping("/id/{id}")
     public Article findById(@PathVariable Long id) {
-        System.out.println(articleService.getArticleById(id));
         return articleService.getArticleById(id);
     }
 
@@ -34,16 +33,16 @@ public class ArticleController {
         articleService.saveArticle(article);
     }
 
-    @GetMapping("/delete/id/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void deleteArticleById(@PathVariable Long id) {
-        articleService.deleteById(id);
-    }
+//    @GetMapping("/delete/id/{id}")
+//    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+//    public void deleteArticleById(@PathVariable Long id) {
+//        articleService.deleteById(id);
+//    }
 
-    @GetMapping("/all")
-    public List<Article> findAllArticles(){
-        return articleService.findAllArticles();
-    }
+//    @GetMapping("/all")
+//    public List<Article> findAllArticles(){
+//        return articleService.findAllArticles();
+//    }
 
     @PostMapping ("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")

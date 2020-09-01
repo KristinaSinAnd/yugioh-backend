@@ -216,5 +216,15 @@ class StockItemControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
+        mockMvc.perform(get ("/stockitem/get/id/abc")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
     }
 }
+
+
