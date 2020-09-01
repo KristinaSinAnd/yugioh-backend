@@ -56,7 +56,9 @@ public class ArticleService {
     }
 
     public void deleteArticle(Article article) {
-        articleRepository.delete(article);
+        Article articleToDelete = articleRepository.findById(article.getId())
+                .orElseThrow(ResourceNotFoundException::new);
+        articleRepository.delete(articleToDelete);
     }
 
     public List<Article> findByArticle(Article article) {

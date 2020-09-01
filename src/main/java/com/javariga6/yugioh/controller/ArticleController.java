@@ -52,7 +52,9 @@ public class ArticleController {
 
     @PostMapping ("/delete")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void delete (@RequestBody Article article) {articleService.deleteArticle(article);}
+    public void delete (@RequestBody @Valid Article article) {
+        articleService.deleteArticle(article);
+    }
 
 
 }

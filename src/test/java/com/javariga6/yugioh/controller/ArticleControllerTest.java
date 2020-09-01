@@ -188,6 +188,35 @@ class ArticleControllerTest {
     }
 
     @Test
-    void delete() {
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void delete() throws Exception {
+        Article articleInDB = articlesInDB.get(RANDOM.nextInt(articlesInDB.size()));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/article/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(articleInDB))
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
+
+//        Article nonexistent
+        mockMvc.perform(MockMvcRequestBuilders.post("/article/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(articleInDB))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        //        Bad request
+        Article article = new Article();
+        mockMvc.perform(MockMvcRequestBuilders.post("/article/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(article))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
