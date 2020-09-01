@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.Article;
 import com.javariga6.yugioh.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class ArticleService {
     }
 
     public Article getArticleById(Long id){
-        return articleRepository.findById(id).orElse(null);
+        return articleRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
     public List<Article> getAllByCardName(String cardName){

@@ -75,6 +75,23 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(articleInDB)))
                 .andReturn();
+
+        mockMvc.perform(get ("/article/id/999")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        mockMvc.perform(get ("/article/id/abc")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
     }
 
     @Test
