@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,8 +29,7 @@ public class ArticleController {
 
     @PostMapping ("/save")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void save(@RequestBody Article article) {
-        System.out.println(article);
+    public void save(@RequestBody @Valid Article article) {
         articleService.saveArticle(article);
     }
 

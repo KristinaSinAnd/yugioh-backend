@@ -49,6 +49,7 @@ class ArticleControllerTest {
 
     @BeforeEach
     public void before(){
+        articleRepository.deleteAll();
         for (int i=0; i<5; ++i){
             Article article = new Article();
             article.setCardType(randomEnum(CardType.class));
@@ -60,13 +61,12 @@ class ArticleControllerTest {
             this.articlesInDB = articleRepository.findAll();
             this.objectMapper = new ObjectMapper();
         }
-
     }
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR"})
     void findById() throws Exception {
-        Article articleInDB = articlesInDB.get(1);
+        Article articleInDB = articlesInDB.get(RANDOM.nextInt(articlesInDB.size()));
         mockMvc.perform(get ("/article/id/"+articleInDB.getId())
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
