@@ -29,8 +29,8 @@ public class ArticleController {
 
     @PostMapping ("/save")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void save(@RequestBody @Valid Article article) {
-        articleService.saveArticle(article);
+    public Article save(@RequestBody @Valid Article article) {
+        return articleService.saveArticle(article);
     }
 
 //    @GetMapping("/delete/id/{id}")
@@ -46,7 +46,9 @@ public class ArticleController {
 
     @PostMapping ("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void update(@RequestBody Article article){articleService.updateArticle(article);}
+    public Article update(@RequestBody @Valid Article article){
+        return articleService.updateArticle(article);
+    }
 
     @PostMapping ("/delete")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")

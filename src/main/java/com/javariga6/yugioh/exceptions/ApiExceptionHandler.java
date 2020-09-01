@@ -17,9 +17,9 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ReferencedResourceNotFoundException.class)
+    @ExceptionHandler(value = {ReferencedResourceNotFoundException.class, IdInUseException.class})
     public ResponseEntity<ErrorResponse> handleApiException(
-            ReferencedResourceNotFoundException ex) {
+            RuntimeException ex) {
         ErrorResponse response =
                 new ErrorResponse("error-0002",
                         "Bad Request!");
