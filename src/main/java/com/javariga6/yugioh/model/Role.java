@@ -3,6 +3,7 @@ package com.javariga6.yugioh.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity(name = "roles")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -13,6 +14,7 @@ public class Role {
     private Long id;
 
     @Column(unique = true, name = "role_name")
+    @NotEmpty
     private String role;
 
     public Long getId() {

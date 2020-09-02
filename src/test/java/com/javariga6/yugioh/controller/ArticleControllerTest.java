@@ -1,10 +1,12 @@
 package com.javariga6.yugioh.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.javariga6.yugioh.model.*;
+import com.javariga6.yugioh.model.Article;
+import com.javariga6.yugioh.model.CardType;
+import com.javariga6.yugioh.model.Edition;
+import com.javariga6.yugioh.model.Rarity;
 import com.javariga6.yugioh.repository.ArticleRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +20,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-
 import java.util.List;
 import java.util.Random;
-
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,28 +34,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class ArticleControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ArticleRepository articleRepository;
-
+    private static final Random RANDOM = new Random();
+    private final String testString = "String for testing";
     public ObjectMapper objectMapper;
     public ObjectWriter objectWriter;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ArticleRepository articleRepository;
     private List<Article> articlesInDB;
 
-    private final String testString = "String for testing";
-
-    private static final Random RANDOM = new Random();
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
         int x = RANDOM.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
 
     @BeforeEach
-    public void before(){
+    public void before() {
         articleRepository.deleteAll();
-        for (int i=0; i<5; ++i){
+        for (int i = 0; i < 5; ++i) {
             Article article = new Article();
             article.setCardType(randomEnum(CardType.class));
             article.setRarity(randomEnum(Rarity.class));
@@ -74,7 +71,7 @@ class ArticleControllerTest {
     void findById() throws Exception {
         Article articleInDB = articlesInDB.get(RANDOM.nextInt(articlesInDB.size()));
 
-        mockMvc.perform(get ("/article/id/"+articleInDB.getId())
+        mockMvc.perform(get("/article/id/" + articleInDB.getId())
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
         )
@@ -83,7 +80,7 @@ class ArticleControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(articleInDB)))
                 .andReturn();
 
-        mockMvc.perform(get ("/article/id/999")
+        mockMvc.perform(get("/article/id/999")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
         )
@@ -91,7 +88,7 @@ class ArticleControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        mockMvc.perform(get ("/article/id/abc")
+        mockMvc.perform(get("/article/id/abc")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
         )

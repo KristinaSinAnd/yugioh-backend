@@ -1,7 +1,8 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.IdInUseException;
+import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.Role;
-import com.javariga6.yugioh.model.User;
 import com.javariga6.yugioh.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,17 @@ public class RoleService {
         this.roleRepository = roleRepository;
     }
 
-    public void saveRole(Role role) {
-        roleRepository.save(role);
+    public Role saveRole(Role role) {
+        if(role.getId() != null) {
+            if (roleRepository.existsById(role.getId())){
+                throw new IdInUseException();
+            }
+        }
+        return roleRepository.save(role);
     }
 
     public Role getRoleById(Long id) {
-        return roleRepository.getOne(id);
+        return roleRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
     public List<Role> getAll() {
@@ -31,10 +37,11 @@ public class RoleService {
         roleRepository.delete(role);
     }
 
-    public void updateRole(Role role) {
-        Role roleFromRepo = roleRepository.getOne(role.getId());
+    public Role updateRole(Role role) {
+        Role roleFromRepo = roleRepository.findById(role.getId())
+                .orElseThrow(ResourceNotFoundException::new);
         roleFromRepo.setRole(role.getRole());
-        roleRepository.save(roleFromRepo);
+        return roleRepository.save(roleFromRepo);
     }
 
 }
