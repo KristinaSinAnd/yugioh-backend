@@ -1,8 +1,9 @@
 package com.javariga6.yugioh.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javariga6.yugioh.model.Role;
+import com.javariga6.yugioh.model.*;
 import com.javariga6.yugioh.repository.RoleRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -103,10 +104,85 @@ class RoleControllerTest {
     }
 
     @Test
-    void delete() {
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void delete() throws Exception {
+        Role roleInDB = rolesInDB.get(RANDOM.nextInt(rolesInDB.size()));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/roles/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(roleInDB))
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
+
+//        Role nonexistent
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/roles/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(roleInDB))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        //        Bad request
+        Role role = new Role();
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/roles/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(role))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void update() {
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void update() throws Exception {
+        Role roleInDB = rolesInDB.get(RANDOM.nextInt(rolesInDB.size()));
+        roleInDB.setRole("updated_name");
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/users/roles/update")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(roleInDB))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        Role responseRole = objectMapper.readValue(response, Role.class);
+        Assert.assertEquals(responseRole.getRole(), "updated_name");
+
+//        Bad Request
+        Role roleWithEmptyRequiredFields = new Role();
+        roleWithEmptyRequiredFields.setId(roleInDB.getId());
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/roles/update")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(roleWithEmptyRequiredFields))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+//        Nonexistent id
+        roleInDB.setId(999L);
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/roles/update")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(roleInDB))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        //        No id set
+        Role role = new Role();
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/roles/update")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(role))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

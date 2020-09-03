@@ -65,7 +65,6 @@ public class CsvController {
         return true;
     }
     @GetMapping("import/itm")
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public boolean importCsv2() throws IOException {
 
         Resource resource = new ClassPathResource("/static/items.csv");

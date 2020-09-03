@@ -45,8 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/user/password/requesttoken").permitAll() // allow creation of users
                 .antMatchers(HttpMethod.POST, "/user/password/reset").permitAll() // allow creation of users
                 .antMatchers(HttpMethod.POST, "/login").permitAll() // allow login for anonymous user
-                .antMatchers(HttpMethod.GET, "/rrr").permitAll() // allow login for anonymous user
-                .antMatchers(HttpMethod.GET, "/csv/import/**").permitAll() // allow login for anonymous user
                 .anyRequest().authenticated(); // deny all other requests by default
     }
 }

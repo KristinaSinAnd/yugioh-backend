@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.BadDataInRequestException;
 import com.javariga6.yugioh.exceptions.IdInUseException;
 import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.Role;
@@ -34,7 +35,12 @@ public class RoleService {
     }
 
     public void deleteRole(Role role) {
-        roleRepository.delete(role);
+        if (role.getId() == null){
+            throw new BadDataInRequestException();
+        }
+        Role roleFromRepo = roleRepository.findById(role.getId())
+                .orElseThrow(ResourceNotFoundException::new);
+        roleRepository.delete(roleFromRepo);
     }
 
     public Role updateRole(Role role) {
