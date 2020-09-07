@@ -43,7 +43,7 @@ $ git clone https://github.com/gatisi/yugioh-backend.git
 > Unpacking objects: 100% (10/10), done.
 ```
 7. Create a new file in your Resources folder callled "application.properties".
-8. Enter the following information in your "application.properties" file, modifying the variables to match your host, database, username and password:
+8. Enter the following information in your "application.properties" file, modifying the variables to match your host, database, usernames and passwords:
 
 ```bash
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
@@ -56,8 +56,8 @@ app.authentication.signature.secret=wTNw9IlZePVwppHmbNvghffhwwTNw9IlZePVwppHmbNv
 app.authentication.validity.period=36000000
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
-spring.mail.username=yugiohstorage@gmail.com
-spring.mail.password=zurrvnvlecpqxumw
+spring.mail.username=YOUR EMAIL ADDRESS HERE
+spring.mail.password=YOUR EMAIL PASSWORD HERE (USE APP PASS WHEREVER POSSIBLE)
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 
