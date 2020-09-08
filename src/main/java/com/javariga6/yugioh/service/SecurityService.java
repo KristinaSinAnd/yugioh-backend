@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.User;
 import com.javariga6.yugioh.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class SecurityService implements UserDetailsService {
 
     @Override
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.getFirstByEmail(email);
+        User user = userRepository.findFirstByEmail(email)
+                .orElseThrow(ResourceNotFoundException::new);
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User \"%s\" not found", email));
         }

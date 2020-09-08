@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,67 +23,71 @@ public class UserController {
 
     @PostMapping
     @RequestMapping("/register")
-    public ResponseEntity save(@RequestBody UserTO user){
-        if(userService.getUserByEmail(user.getEmail()) == null) {
-            userService.saveUser(user);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok().build();
+    public UserTO save(@RequestBody @Valid UserTO user) {
+        return userService.saveUser(user);
     }
+
+    @PostMapping("/admin")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    public UserTO makeUserAdmin(@RequestBody @Valid User user) {
+        return userService.makeUserAdmin(user);
+    }
+
 
     @PostMapping("/delete")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public ResponseEntity delete(@RequestBody User user){
-        if(userService.getUserByEmail(user.getEmail())!= null){
-            userService.delete(user);
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().build();
-        }
+    public void delete(@RequestBody User user) {
+        userService.delete(user);
+    }
 
     @GetMapping("/get/id/{id}")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public User getUserById(@PathVariable Long id){ return userService.getUserById(id); }
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
 
-    @GetMapping("/get/email/{email}")
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public User getUserByEmail(@PathVariable String email){ return userService.getUserByEmail(email); }
+//    @GetMapping("/get/email/{email}")
+//    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+//    public User getUserByEmail(@PathVariable String email) {
+//        return userService.(email);
+//    }
 
     @GetMapping("/delete/id/{id}")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void deleteUserById(@PathVariable Long id){ userService.deleteById(id); }
+    public void deleteUserById(@PathVariable Long id) {
+        userService.deleteById(id);
+    }
 
-    @GetMapping("/delete/email/{email}")
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void deleteUserByEmail(@PathVariable String email){ userService.deleteByEmail(email); }
+//    @GetMapping("/delete/email/{email}")
+//    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+//    public void deleteUserByEmail(@PathVariable String email) {
+//        userService.deleteByEmail(email);
+//    }
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userService.getAll();
     }
 
     @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void update(@RequestBody User user){
+    public void update(@RequestBody User user) {
         this.userService.updateUser(user);
     }
 
     @PostMapping("/updatethis")
-    public void updateThis(@RequestBody UserTO userTO){
+    public void updateThis(@RequestBody UserTO userTO) {
         this.userService.updateThisUser(userTO);
     }
 
     @PostMapping("/password/requesttoken")
-    public void passResetRequest(@RequestBody PassResetRequest request){
+    public void passResetRequest(@RequestBody PassResetRequest request) {
         userService.sendRecoveryToken(request);
     }
 
     @PostMapping("/password/reset")
-    public void reset(@RequestBody ResetRequest request){
+    public void reset(@RequestBody ResetRequest request) {
         userService.passReset(request);
     }
 

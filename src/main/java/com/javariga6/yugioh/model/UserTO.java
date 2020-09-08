@@ -1,10 +1,16 @@
 package com.javariga6.yugioh.model;
 
+import javax.validation.constraints.NotEmpty;
+
 public class UserTO {
 
+    @NotEmpty
     private String email;
+    @NotEmpty
     private String password;
+
     private String surname;
+    @NotEmpty
     private String name;
     private Role role;
 

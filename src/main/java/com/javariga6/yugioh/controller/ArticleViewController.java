@@ -21,8 +21,6 @@ public class ArticleViewController {
     public List<ArticleView> getAllArticlesView() {
         return articleViewService.getAllArticlesView();
     }
-
-
 }
 
 

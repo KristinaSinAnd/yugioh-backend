@@ -45,17 +45,7 @@ public class AuthController {
         userTO.setEmail(user.getEmail());
         userTO.setName(user.getName());
         userTO.setSurname(user.getSurname());
-
-        Role role = new Role();
-        role.setRole(user.getRole().getRole());
-
-        userTO.setRole(role);
+        userTO.setRole(user.getRole());
         return userTO;
-    }
-
-    @GetMapping("/rrr")
-    public String rrr(){
-        System.out.println("rrr works!");
-        return "rrr";
     }
 }

@@ -6,6 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 
 @Entity(name = "users")
@@ -18,12 +20,14 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "user_name")
+    @NotEmpty
     private String name;
 
     @Column(name = "user_surname")
     private String surname;
 
     @Column(unique = true, name = "user_email")
+    @Email
     private String email;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -32,6 +36,7 @@ public class User implements UserDetails {
 
     @Column(name = "password", nullable = false)
     @JsonIgnore
+    @NotEmpty
     private String password;
 
     public void setPassword(String password) {

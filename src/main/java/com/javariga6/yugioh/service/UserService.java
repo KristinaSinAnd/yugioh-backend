@@ -1,5 +1,7 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.EmailInUseException;
+import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.*;
 import com.javariga6.yugioh.repository.PassRecoveryTokenRepository;
 import com.javariga6.yugioh.repository.RoleRepository;
@@ -34,7 +36,10 @@ public class UserService {
     }
 
 
-    public void saveUser(UserTO userTo) {
+    public UserTO saveUser(UserTO userTo) {
+        if(userRepository.existsByEmail(userTo.getEmail())){
+            throw new EmailInUseException();
+        }
         User user = new User();
         user.setEmail(userTo.getEmail());
         user.setName(userTo.getName());
@@ -44,15 +49,22 @@ public class UserService {
         );
 
 
-        Role role = roleRepository.getFirstByRole("ROLE_USER");    //TODO Change to user for prod
+        Role role = roleRepository.getFirstByRole("ROLE_USER");
         if (role == null) {
             role = new Role();
             role.setRole("ROLE_USER");
             roleRepository.save(role);
         }
 
+
         user.setRole(role);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        UserTO userTO = new UserTO();
+        userTO.setEmail(user.getEmail());
+        userTO.setName(user.getName());
+        userTO.setSurname(user.getSurname());
+        userTO.setRole(user.getRole());
+        return userTO;
     }
 
     @Transactional
@@ -65,24 +77,18 @@ public class UserService {
         return userRepository.getOne(id).getRole();
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.getFirstByEmail(email);
-    }
+//    public User getUserByEmail(String email) {
+//        return userRepository.getFirstByEmail(email);
+//    }
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
 
-    public void deleteByEmail(String email) {
-        User userToDelete = userRepository.getFirstByEmail(email);
-        userRepository.delete(userToDelete);
-    }
-
     public void delete(User user) {
-
-        userRepository.delete(
-                userRepository.getFirstByEmail(user.getEmail())
-        );
+        User userFromRepo = userRepository.findFirstByEmail(user.getEmail())
+                .orElseThrow(ResourceNotFoundException::new);
+        userRepository.delete(userFromRepo);
     }
 
     public List<User> getAll() {
@@ -113,7 +119,8 @@ public class UserService {
     }
 
     public void sendRecoveryToken(PassResetRequest request) {
-        User user = userRepository.getFirstByEmail(request.getEmail());
+        User user = userRepository.findFirstByEmail(request.getEmail())
+                .orElseThrow(ResourceNotFoundException::new);
         if (user == null) return;
         PassRecoveryToken token = passRecoveryTokenRepository.findFirstByUser(user);
         if (token==null) {
@@ -140,5 +147,27 @@ public class UserService {
         );
         userRepository.save(user);
         passRecoveryTokenRepository.delete(token);
+    }
+
+    public UserTO makeUserAdmin(User user) {
+        User userFromRepo = userRepository.findById(user.getId())
+                .orElseThrow(ResourceNotFoundException::new);
+        Role role = roleRepository.findFirstByRole("ROLE_ADMINISTRATOR")
+                .orElse(createAdminRole("ROLE_ADMINISTRATOR"));
+        userFromRepo.setRole(role);
+        userRepository.save(userFromRepo);
+        UserTO userTO = new UserTO();
+        userTO.setRole(userFromRepo.getRole());
+        userTO.setSurname(userFromRepo.getSurname());
+        userTO.setName(userFromRepo.getName());
+        userTO.setEmail(userFromRepo.getEmail());
+        return userTO;
+    }
+
+    private Role createAdminRole(String roleName){
+        Role role = new Role();
+        role.setRole(roleName);
+        role = roleRepository.save(role);
+        return role;
     }
 }
