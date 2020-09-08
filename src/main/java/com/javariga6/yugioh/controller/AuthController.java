@@ -1,9 +1,6 @@
 package com.javariga6.yugioh.controller;
 
-import com.javariga6.yugioh.model.AuthenticationResult;
-import com.javariga6.yugioh.model.Role;
-import com.javariga6.yugioh.model.User;
-import com.javariga6.yugioh.model.UserTO;
+import com.javariga6.yugioh.model.*;
 import com.javariga6.yugioh.service.SecurityService;
 import com.javariga6.yugioh.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,24 +25,24 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public AuthenticationResult authenticate(@RequestBody UserTO userTO) {
+    public AuthenticationResult authenticate(@RequestBody UserLogin userLogin) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userTO.getEmail(), userTO.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword()));
         } catch (Exception e) {
             throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "Bad credentials");
         }
 
-        return new AuthenticationResult(securityService.generateToken(securityService.loadUserByUsername(userTO.getEmail())));
+        return new AuthenticationResult(securityService.generateToken(securityService.loadUserByUsername(userLogin.getEmail())));
     }
 
     @GetMapping("/userinfo")
-    public UserTO getPrincipalUser(){
-        UserTO userTO = new UserTO();
+    public UserDTO getPrincipalUser(){
+        UserDTO userDTO = new UserDTO();
         User user = userService.getUserById(securityService.getUserId());
-        userTO.setEmail(user.getEmail());
-        userTO.setName(user.getName());
-        userTO.setSurname(user.getSurname());
-        userTO.setRole(user.getRole());
-        return userTO;
+        userDTO.setEmail(user.getEmail());
+        userDTO.setName(user.getName());
+        userDTO.setSurname(user.getSurname());
+        userDTO.setRole(user.getRole());
+        return userDTO;
     }
 }

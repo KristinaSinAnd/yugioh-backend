@@ -3,7 +3,6 @@ package com.javariga6.yugioh.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javariga6.yugioh.model.Role;
 import com.javariga6.yugioh.model.User;
-import com.javariga6.yugioh.model.UserTO;
 import com.javariga6.yugioh.repository.RoleRepository;
 import com.javariga6.yugioh.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,6 +39,7 @@ class UserControllerTest {
     private PasswordEncoder passwordEncoder;
 
     public ObjectMapper objectMapper;
+    private static final Random RANDOM = new Random();
 
     private User admin;
     private List<User> users;
@@ -80,43 +81,81 @@ class UserControllerTest {
 
     @Test
     void save() throws Exception{
-        UserTO userTO = new UserTO();
-        userTO.setEmail("new_user@email.com");
-        userTO.setName("new_user_name");
-        userTO.setPassword("new_user_password");
+        User newUser = new User();
+        newUser.setEmail("new_user@email.com");
+        newUser.setName("new_user_name");
+        newUser.setPassword("new_user_password");
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userTO))
+                .content(objectMapper.writeValueAsString(newUser))
         )
                 .andDo(print())
                 .andExpect(status().isOk());
 
 //       email not valid
-        userTO.setEmail("not_a_valid_email");
+        newUser.setEmail("not_a_valid_email");
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userTO))
+                .content(objectMapper.writeValueAsString(newUser))
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
-//        no password set
-        userTO.setEmail("valid@email.com");
-        userTO.setPassword("");
+        //       email already registered
+        newUser.setEmail("new_user@email.com");
         mockMvc.perform(MockMvcRequestBuilders.post("/user/register")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userTO))
+                .content(objectMapper.writeValueAsString(newUser))
+        )
+                .andDo(print())
+                .andExpect(status().isConflict());
+
+//        no password set
+        newUser.setEmail("valid@email.com");
+        newUser.setPassword("");
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/register")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newUser))
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void delete() {
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void delete() throws Exception {
+        User userInDB = users.get(RANDOM.nextInt(users.size()));
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userInDB))
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
+
+//        User nonexistent
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userInDB))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        //        Bad request
+        User user = new User();
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/delete")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test

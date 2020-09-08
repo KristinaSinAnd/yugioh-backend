@@ -1,6 +1,5 @@
 package com.javariga6.yugioh.exceptions;
 
-import org.hibernate.TransientPropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +18,15 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(EmailInUseException.class)
+    public ResponseEntity<ErrorResponse> handleApiException(
+            EmailInUseException ex) {
+        ErrorResponse response =
+                new ErrorResponse("error-0003",
+                        "Email in use!");
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(value = {ReferencedResourceNotFoundException.class, IdInUseException.class, BadDataInRequestException.class, ConstraintViolationException.class})
     public ResponseEntity<ErrorResponse> handleApiException(
             RuntimeException ex) {
@@ -27,14 +35,4 @@ public class ApiExceptionHandler {
                         "Bad Request!");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(value = EmailInUseException.class)
-    public ResponseEntity<ErrorResponse> handleApiException(
-            DataConflictException ex) {
-        ErrorResponse response =
-                new ErrorResponse("error-0003",
-                        "Data conflict!");
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-    }
-
 }

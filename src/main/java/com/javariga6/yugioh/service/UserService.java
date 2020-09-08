@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.BadDataInRequestException;
 import com.javariga6.yugioh.exceptions.EmailInUseException;
 import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.*;
@@ -31,23 +32,15 @@ public class UserService {
         this.passRecoveryTokenRepository = passRecoveryTokenRepository;
     }
 
-    public void saveUser(User user) {
-        userRepository.save(user);
-    }
 
-
-    public UserTO saveUser(UserTO userTo) {
-        if(userRepository.existsByEmail(userTo.getEmail())){
+    public UserDTO saveUser(User user) {
+        if(userRepository.existsByEmail(user.getEmail())){
             throw new EmailInUseException();
         }
-        User user = new User();
-        user.setEmail(userTo.getEmail());
-        user.setName(userTo.getName());
-        user.setSurname(userTo.getSurname());
+        System.out.println(user);
         user.setPassword(
-                passwordEncoder.encode(userTo.getPassword())
+                passwordEncoder.encode(user.getPassword())
         );
-
 
         Role role = roleRepository.getFirstByRole("ROLE_USER");
         if (role == null) {
@@ -58,13 +51,14 @@ public class UserService {
 
 
         user.setRole(role);
-        User savedUser = userRepository.save(user);
-        UserTO userTO = new UserTO();
-        userTO.setEmail(user.getEmail());
-        userTO.setName(user.getName());
-        userTO.setSurname(user.getSurname());
-        userTO.setRole(user.getRole());
-        return userTO;
+        user = userRepository.save(user);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setName(user.getName());
+        userDTO.setSurname(user.getSurname());
+        userDTO.setRole(user.getRole());
+        return userDTO;
     }
 
     @Transactional
@@ -81,11 +75,11 @@ public class UserService {
 //        return userRepository.getFirstByEmail(email);
 //    }
 
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
-    }
+//    public void deleteById(Long id) {
+//        userRepository.deleteById(id);
+//    }
 
-    public void delete(User user) {
+    public void delete(UserDTO user) {
         User userFromRepo = userRepository.findFirstByEmail(user.getEmail())
                 .orElseThrow(ResourceNotFoundException::new);
         userRepository.delete(userFromRepo);
@@ -103,15 +97,15 @@ public class UserService {
         userRepository.save(userFromRepo);
     }
 
-    public void updateThisUser(UserTO userTO) {
+    public void updateThisUser(User updatedUser) {
         User user = userRepository.getOne(securityService.getUserId());
-        user.setEmail(userTO.getEmail());
-        user.setName(userTO.getName());
-        user.setSurname(userTO.getSurname());
-        if (userTO.getPassword() != null) {
+        user.setEmail(updatedUser.getEmail());
+        user.setName(updatedUser.getName());
+        user.setSurname(updatedUser.getSurname());
+        if (updatedUser.getPassword() != null) {
             user.setPassword(
                     passwordEncoder.encode(
-                            userTO.getPassword()
+                            updatedUser.getPassword()
                     )
             );
         }
@@ -149,19 +143,19 @@ public class UserService {
         passRecoveryTokenRepository.delete(token);
     }
 
-    public UserTO makeUserAdmin(User user) {
+    public UserDTO makeUserAdmin(User user) {
         User userFromRepo = userRepository.findById(user.getId())
                 .orElseThrow(ResourceNotFoundException::new);
         Role role = roleRepository.findFirstByRole("ROLE_ADMINISTRATOR")
                 .orElse(createAdminRole("ROLE_ADMINISTRATOR"));
         userFromRepo.setRole(role);
         userRepository.save(userFromRepo);
-        UserTO userTO = new UserTO();
-        userTO.setRole(userFromRepo.getRole());
-        userTO.setSurname(userFromRepo.getSurname());
-        userTO.setName(userFromRepo.getName());
-        userTO.setEmail(userFromRepo.getEmail());
-        return userTO;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setRole(userFromRepo.getRole());
+        userDTO.setSurname(userFromRepo.getSurname());
+        userDTO.setName(userFromRepo.getName());
+        userDTO.setEmail(userFromRepo.getEmail());
+        return userDTO;
     }
 
     private Role createAdminRole(String roleName){

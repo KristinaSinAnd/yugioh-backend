@@ -35,7 +35,6 @@ public class User implements UserDetails {
     private Role role;
 
     @Column(name = "password", nullable = false)
-    @JsonIgnore
     @NotEmpty
     private String password;
 
