@@ -80,12 +80,12 @@ public class UserController {
 //    }
 
     @PostMapping("/password/requesttoken")
-    public void passResetRequest(@RequestBody PassResetRequest request) {
+    public void passResetRequest(@RequestBody @Valid PassResetRequest request) {
         userService.sendRecoveryToken(request);
     }
 
     @PostMapping("/password/reset")
-    public void reset(@RequestBody ResetRequest request) {
+    public void reset(@RequestBody @Valid ResetRequest request) {
         userService.passReset(request);
     }
 

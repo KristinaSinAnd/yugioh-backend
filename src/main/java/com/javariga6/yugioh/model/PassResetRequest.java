@@ -1,7 +1,10 @@
 package com.javariga6.yugioh.model;
 
+import javax.validation.constraints.Email;
+
 public class PassResetRequest {
     private String host;
+    @Email
     private String email;
 
     public String getHost() {

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -220,7 +221,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"ADMINISTRATOR"})
     void passResetRequest() throws Exception{
         User userInDb = users.get(RANDOM.nextInt(users.size()));
         PassResetRequest request = new PassResetRequest();
@@ -251,14 +251,99 @@ class UserControllerTest {
     }
 
     @Test
-    void reset() {
+    void reset() throws Exception{
+        User userInDb = users.get(RANDOM.nextInt(users.size()));
+        PassResetRequest request = new PassResetRequest();
+        request.setEmail(userInDb.getEmail());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/password/requesttoken")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+        );
+
+        ResetRequest resetRequest = new ResetRequest();
+        resetRequest.setPassword("new_password");
+        resetRequest.setTokenStr(passRecoveryTokenRepository.findFirstByUser(
+                userInDb
+        ).get().getToken());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/password/reset")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(resetRequest))
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
+        String pass = userRepository.findFirstByEmail(userInDb.getEmail()).get().getPassword();
+
+        Assert.assertTrue(
+            passwordEncoder.matches("new_password", pass)
+        );
+
+//        empty password
+        resetRequest.setPassword("");
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/password/reset")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(resetRequest))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+//        token doesn't exist
+        resetRequest.setPassword("password");
+        resetRequest.setTokenStr("wrong_token_string");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/password/reset")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(resetRequest))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR"})
-    void makeUserAdmin() {
+    void makeUserAdmin() throws Exception {
+        User userInDb = users.get(RANDOM.nextInt(users.size()));
+        Assert.assertEquals(userInDb.getRole().getRole(), "ROLE_USER");
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/admin")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userInDb))
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
 
+        String newRole = userRepository.findFirstByEmail(userInDb.getEmail()).get().getRole().getRole();
+        Assert.assertEquals(newRole, "ROLE_ADMINISTRATOR");
+
+//        bad request
+        User user = new User();
+        user.setEmail(userInDb.getEmail());
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/admin")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+//        user not in DB
+
+        userInDb.setEmail("user@notindb.com");
+        userInDb.setId(999L);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/admin")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userInDb))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
 //    @Test

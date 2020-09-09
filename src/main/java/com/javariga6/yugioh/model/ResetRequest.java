@@ -1,7 +1,11 @@
 package com.javariga6.yugioh.model;
 
+import javax.validation.constraints.NotEmpty;
+
 public class ResetRequest {
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String tokenStr;
 
     @Override

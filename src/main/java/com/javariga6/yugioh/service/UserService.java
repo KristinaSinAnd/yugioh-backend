@@ -147,7 +147,7 @@ public class UserService {
         User userFromRepo = userRepository.findById(user.getId())
                 .orElseThrow(ResourceNotFoundException::new);
         Role role = roleRepository.findFirstByRole("ROLE_ADMINISTRATOR")
-                .orElse(createAdminRole("ROLE_ADMINISTRATOR"));
+                .orElseGet(() -> createAdminRole("ROLE_ADMINISTRATOR"));
         userFromRepo.setRole(role);
         userRepository.save(userFromRepo);
         UserDTO userDTO = new UserDTO();

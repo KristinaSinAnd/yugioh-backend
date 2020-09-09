@@ -8,6 +8,13 @@ import javax.validation.constraints.NotEmpty;
 @Entity(name = "roles")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Role {
+    public Role() {
+    }
+
+    public Role(String role) {
+        this.role = role;
+    }
+
     @Id
     @Column(name = "id_roles")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
