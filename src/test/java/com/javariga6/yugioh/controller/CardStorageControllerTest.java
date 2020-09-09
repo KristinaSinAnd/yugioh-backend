@@ -130,11 +130,11 @@ class CardStorageControllerTest {
                 .andExpect(status().isNotFound());
 
         //        No id set
-        CardStorage role = new CardStorage();
+        CardStorage storage = new CardStorage();
         mockMvc.perform(MockMvcRequestBuilders.post("/cardstorage/update")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(role))
+                .content(objectMapper.writeValueAsString(storage))
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest());

@@ -1,10 +1,12 @@
 package com.javariga6.yugioh.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javariga6.yugioh.model.Role;
-import com.javariga6.yugioh.model.User;
+import com.javariga6.yugioh.model.*;
+import com.javariga6.yugioh.repository.PassRecoveryTokenRepository;
 import com.javariga6.yugioh.repository.RoleRepository;
 import com.javariga6.yugioh.repository.UserRepository;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ class UserControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    PassRecoveryTokenRepository passRecoveryTokenRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -159,27 +164,90 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserById() {
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void getAllUsers() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/user/all")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        List<UserDTO> storageList = objectMapper.readValue(response, new TypeReference<List<UserDTO>>(){});
+        Assert.assertEquals(storageList.size(), users.size()+1);
     }
 
     @Test
-    void getUserByEmail() {
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void update() throws Exception{
+        User userInDb = users.get(RANDOM.nextInt(users.size()));
+        userInDb.setName("updated_name");
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/update")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userInDb))
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        UserDTO responseUserDTO = objectMapper.readValue(response, UserDTO.class);
+        Assert.assertEquals(responseUserDTO.getName(), "updated_name");
+
+//        Bad Request
+        User userWithEmptyRequiredFields = new User();
+        userWithEmptyRequiredFields.setId(userInDb.getId());
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/update")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userWithEmptyRequiredFields))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+//        Id don't mach
+        userInDb.setId(999L);
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/update")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userInDb))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+
     }
 
     @Test
-    void getAllUsers() {
-    }
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void passResetRequest() throws Exception{
+        User userInDb = users.get(RANDOM.nextInt(users.size()));
+        PassResetRequest request = new PassResetRequest();
+        request.setEmail(userInDb.getEmail());
 
-    @Test
-    void update() {
-    }
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/password/requesttoken")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
+        Assert.assertNotNull(
+                passRecoveryTokenRepository.findFirstByUser(userInDb)
+        );
 
-    @Test
-    void updateThis() {
-    }
 
-    @Test
-    void passResetRequest() {
+//        email not registered
+        request.setEmail("wrong@email.com");
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/password/requesttoken")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
     }
 
     @Test

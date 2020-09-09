@@ -38,11 +38,11 @@ public class UserController {
         userService.delete(userDTO);
     }
 
-    @GetMapping("/get/id/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
-    }
+//    @GetMapping("/get/id/{id}")
+//    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+//    public User getUserById(@PathVariable Long id) {
+//        return userService.getUserById(id);
+//    }
 
 //    @GetMapping("/get/email/{email}")
 //    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
@@ -64,20 +64,20 @@ public class UserController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userService.getAll();
     }
 
     @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void update(@RequestBody User user) {
-        this.userService.updateUser(user);
+    public UserDTO update(@RequestBody @Valid User user) {
+        return this.userService.updateUser(user);
     }
 
-    @PostMapping("/updatethis")
-    public void updateThis(@RequestBody User user) {
-        this.userService.updateThisUser(user);
-    }
+//    @PostMapping("/updatethis")
+//    public void updateThis(@RequestBody User user) {
+//        this.userService.updateThisUser(user);
+//    }
 
     @PostMapping("/password/requesttoken")
     public void passResetRequest(@RequestBody PassResetRequest request) {

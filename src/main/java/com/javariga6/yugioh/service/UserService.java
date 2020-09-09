@@ -3,6 +3,7 @@ package com.javariga6.yugioh.service;
 import com.javariga6.yugioh.exceptions.BadDataInRequestException;
 import com.javariga6.yugioh.exceptions.EmailInUseException;
 import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
+import com.javariga6.yugioh.mapper.UserMapper;
 import com.javariga6.yugioh.model.*;
 import com.javariga6.yugioh.repository.PassRecoveryTokenRepository;
 import com.javariga6.yugioh.repository.RoleRepository;
@@ -11,8 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -52,13 +55,7 @@ public class UserService {
 
         user.setRole(role);
         user = userRepository.save(user);
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setName(user.getName());
-        userDTO.setSurname(user.getSurname());
-        userDTO.setRole(user.getRole());
-        return userDTO;
+        return UserMapper.toDTO(user);
     }
 
     @Transactional
@@ -85,16 +82,22 @@ public class UserService {
         userRepository.delete(userFromRepo);
     }
 
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserDTO> getAll() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(UserMapper::toDTO).collect(Collectors.toList());
     }
 
-    public void updateUser(User user) {
-        User userFromRepo = userRepository.getOne(user.getId());
+    public UserDTO updateUser(User user) {
+        User userFromRepo = userRepository.findFirstByEmail(user.getEmail())
+                .orElseThrow(ResourceNotFoundException::new);
+        if(user.getId()!=userFromRepo.getId()){
+            throw new BadDataInRequestException();
+        }
         userFromRepo.setName(user.getName());
         userFromRepo.setEmail(user.getEmail());
         userFromRepo.setSurname(user.getSurname());
-        userRepository.save(userFromRepo);
+        return UserMapper.toDTO(
+                userRepository.save(userFromRepo));
     }
 
     public void updateThisUser(User updatedUser) {
@@ -115,11 +118,8 @@ public class UserService {
     public void sendRecoveryToken(PassResetRequest request) {
         User user = userRepository.findFirstByEmail(request.getEmail())
                 .orElseThrow(ResourceNotFoundException::new);
-        if (user == null) return;
-        PassRecoveryToken token = passRecoveryTokenRepository.findFirstByUser(user);
-        if (token==null) {
-            token = new PassRecoveryToken();
-        }
+        PassRecoveryToken token = passRecoveryTokenRepository.findFirstByUser(user)
+                .orElseGet(PassRecoveryToken::new);
         String tokenStr = UUID.randomUUID().toString();
         token.setToken(tokenStr);
         token.setUser(user);
@@ -134,7 +134,7 @@ public class UserService {
     public void passReset(ResetRequest request) {
         PassRecoveryToken token = passRecoveryTokenRepository.findFirstByToken(
                 request.getTokenStr()
-        );
+        ).orElseThrow(ResourceNotFoundException::new);
         User user = token.getUser();
         user.setPassword(
                 passwordEncoder.encode(request.getPassword())
