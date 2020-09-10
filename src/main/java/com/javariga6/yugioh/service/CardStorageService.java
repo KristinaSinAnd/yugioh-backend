@@ -27,9 +27,9 @@ public class CardStorageService {
         return cardStorageRepository.save(cardStorage);
     }
 
-    public void findCardStorageById(Long id) {
-        cardStorageRepository.findById(id);
-    }
+//    public void findCardStorageById(Long id) {
+//        cardStorageRepository.findById(id);
+//    }
 
     public CardStorage updateCardStorage(CardStorage cardStorage) {
        if(cardStorage.getId()==null){
@@ -58,6 +58,8 @@ public class CardStorageService {
         return cardStorageRepository.findAll();
     }
 
+
+//    todo for csv import
     public CardStorage findByName(String name){
         return cardStorageRepository.findFirstByStorageName(name);
     }

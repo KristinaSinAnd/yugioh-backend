@@ -26,9 +26,9 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public Role getRoleById(Long id) {
-        return roleRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
-    }
+//    public Role getRoleById(Long id) {
+//        return roleRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+//    }
 
     public List<Role> getAll() {
         return roleRepository.findAll();
@@ -44,6 +44,9 @@ public class RoleService {
     }
 
     public Role updateRole(Role role) {
+        if(role.getId() == null){
+            throw new BadDataInRequestException();
+        }
         Role roleFromRepo = roleRepository.findById(role.getId())
                 .orElseThrow(ResourceNotFoundException::new);
         roleFromRepo.setRole(role.getRole());

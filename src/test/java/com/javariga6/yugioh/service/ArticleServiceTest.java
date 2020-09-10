@@ -102,7 +102,6 @@ class ArticleServiceTest {
         Mockito.when(articleRepository.findById(99L))
                 .thenReturn(Optional.empty());
 
-
         Assert.assertThrows(ResourceNotFoundException.class, ()->articleService.deleteArticle(articleNotExisting));
         Assert.assertThrows(BadDataInRequestException.class, ()->articleService.deleteArticle(articleWithoutId));
     }
