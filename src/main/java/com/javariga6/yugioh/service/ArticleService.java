@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.BadDataInRequestException;
 import com.javariga6.yugioh.exceptions.IdInUseException;
 import com.javariga6.yugioh.exceptions.ReferencedResourceNotFoundException;
 import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
@@ -16,17 +17,20 @@ public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
-    public List<Article> getAllArticles() {
-        return articleRepository.findAll();
-    }
+//    public List<Article> getAllArticles() {
+//        return articleRepository.findAll();
+//    }
 
     public Article getArticleById(Long id) {
+        if(id == null){
+            throw new BadDataInRequestException();
+        }
         return articleRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
-    public List<Article> getAllByCardName(String cardName) {
-        return articleRepository.findByCardName(cardName);
-    }
+//    public List<Article> getAllByCardName(String cardName) {
+//        return articleRepository.findByCardName(cardName);
+//    }
 
     public Article saveArticle(Article article) {
         if (article.getId() != null) {
@@ -37,25 +41,28 @@ public class ArticleService {
         return articleRepository.save(article);
     }
 
-    public void deleteById(Long id) {
-        articleRepository.deleteById(id);
-    }
+//    public void deleteById(Long id) {
+//        articleRepository.deleteById(id);
+//    }
 
-    public List<Article> getArticleByBoosterSet(String boosterSet) {
-        return articleRepository.findByBoosterSet(boosterSet);
-    }
+//    public List<Article> getArticleByBoosterSet(String boosterSet) {
+//        return articleRepository.findByBoosterSet(boosterSet);
+//    }
 
-    public List<Article> findAllArticles() {
-        return articleRepository.findAll();
-    }
+//    public List<Article> findAllArticles() {
+//        return articleRepository.findAll();
+//    }
 
     public Article updateArticle(Article article) {
-        Article articleToUpdate = articleRepository.findById(article.getId())
+        articleRepository.findById(article.getId())
                 .orElseThrow(ResourceNotFoundException::new);
         return articleRepository.save(article);
     }
 
     public void deleteArticle(Article article) {
+        if(article.getId() == null){
+            throw new BadDataInRequestException();
+        }
         Article articleToDelete = articleRepository.findById(article.getId())
                 .orElseThrow(ResourceNotFoundException::new);
         articleRepository.delete(articleToDelete);

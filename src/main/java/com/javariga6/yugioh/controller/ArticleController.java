@@ -24,10 +24,10 @@ public class ArticleController {
         return articleService.getArticleById(id);
     }
 
-    @GetMapping("/booster/{booster_set}")
-    public Article findByBoosterSet(@PathVariable String boosterSet) {
-        return (Article) articleService.getArticleByBoosterSet(boosterSet);
-    }
+//    @GetMapping("/booster/{booster_set}")
+//    public Article findByBoosterSet(@PathVariable String boosterSet) {
+//        return (Article) articleService.getArticleByBoosterSet(boosterSet);
+//    }
 
     @PostMapping("/save")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
