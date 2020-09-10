@@ -31,11 +31,6 @@ public class RoleController {
         return roleService.getAll();
     }
 
-//    @GetMapping("/id/{id}")
-//    public Role getRoleById(@PathVariable Long id) {
-//        return roleService.getRoleById(id);
-//    }
-
     @PostMapping("/delete")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public void delete(@RequestBody @Valid Role role) {

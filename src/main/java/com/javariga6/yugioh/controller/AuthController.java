@@ -39,7 +39,7 @@ public class AuthController {
 
     @GetMapping("/userinfo")
     @PreAuthorize("isAuthenticated()")
-    public UserDTO getPrincipalUser(){
+    public UserDTO getPrincipalUser() {
         UserDTO userDTO = new UserDTO();
         User user = userService.getUserById(securityService.getUserId());
         userDTO.setEmail(user.getEmail());

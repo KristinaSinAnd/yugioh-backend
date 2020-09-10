@@ -29,7 +29,7 @@ public class StockItemController {
         return stockItemService.saveStockItem(stockItem);
     }
 
-    @PostMapping ("/update")
+    @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     @ResponseStatus(HttpStatus.OK)
     public StockItem update(@RequestBody @Valid StockItem stockItem) {
@@ -42,12 +42,6 @@ public class StockItemController {
     public void delete(@RequestBody @Valid StockItem stockItem) {
         stockItemService.delete(stockItem);
     }
-
-//    @GetMapping("/delete/id/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-//    public void deleteStockItemById(@PathVariable Long id) {
-//        stockItemService.deleteStockItemById(id);
-//    }
 
     @GetMapping("/get/id/{id}")
     public void findStockItemById(@PathVariable Long id) {

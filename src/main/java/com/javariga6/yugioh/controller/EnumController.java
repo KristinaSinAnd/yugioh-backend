@@ -15,19 +15,22 @@ import java.util.List;
 @RequestMapping("/enum")
 public class EnumController {
     @GetMapping("card_type")
-    public List<CardType> getCardTypes(){
+    public List<CardType> getCardTypes() {
         return Arrays.asList(CardType.values());
     }
-     @GetMapping("card_condition")
-    public List<CardCondition> getCardConditions(){
+
+    @GetMapping("card_condition")
+    public List<CardCondition> getCardConditions() {
         return Arrays.asList(CardCondition.values());
     }
-     @GetMapping("edition")
-    public List<Edition> getEditions(){
+
+    @GetMapping("edition")
+    public List<Edition> getEditions() {
         return Arrays.asList(Edition.values());
     }
-     @GetMapping("rarity")
-    public List<Rarity> getRaritys(){
+
+    @GetMapping("rarity")
+    public List<Rarity> getRaritys() {
         return Arrays.asList(Rarity.values());
     }
 }

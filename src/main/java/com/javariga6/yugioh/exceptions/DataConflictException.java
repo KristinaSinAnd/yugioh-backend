@@ -1,6 +1,6 @@
 package com.javariga6.yugioh.exceptions;
 
-public class DataConflictException extends RuntimeException{
+public class DataConflictException extends RuntimeException {
     public DataConflictException() {
     }
 

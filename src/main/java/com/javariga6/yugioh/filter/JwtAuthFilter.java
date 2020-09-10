@@ -28,11 +28,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 public class JwtAuthFilter extends BasicAuthenticationFilter {
-    @Autowired
-    private UserService userService;
     private static final String HEADER = "Authorization";
     private static final String PREFIX = "Bearer ";
-
+    @Autowired
+    private UserService userService;
     @Value("${app.authentication.signature.secret}")
     private String SECRET;
 

@@ -25,34 +25,25 @@ public class ArticleController {
     }
 
     @GetMapping("/booster/{booster_set}")
-    public Article findByBoosterSet(@PathVariable String boosterSet){return (Article) articleService.getArticleByBoosterSet(boosterSet);}
+    public Article findByBoosterSet(@PathVariable String boosterSet) {
+        return (Article) articleService.getArticleByBoosterSet(boosterSet);
+    }
 
-    @PostMapping ("/save")
+    @PostMapping("/save")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public Article save(@RequestBody @Valid Article article) {
         return articleService.saveArticle(article);
     }
 
-//    @GetMapping("/delete/id/{id}")
-//    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-//    public void deleteArticleById(@PathVariable Long id) {
-//        articleService.deleteById(id);
-//    }
-
-//    @GetMapping("/all")
-//    public List<Article> findAllArticles(){
-//        return articleService.findAllArticles();
-//    }
-
-    @PostMapping ("/update")
+    @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public Article update(@RequestBody @Valid Article article){
+    public Article update(@RequestBody @Valid Article article) {
         return articleService.updateArticle(article);
     }
 
-    @PostMapping ("/delete")
+    @PostMapping("/delete")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public void delete (@RequestBody @Valid Article article) {
+    public void delete(@RequestBody @Valid Article article) {
         articleService.deleteArticle(article);
     }
 

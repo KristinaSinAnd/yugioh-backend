@@ -49,7 +49,7 @@ public class CsvController {
                 article.setRarity(Rarity.valueOf(values[3]));
                 article.setCardType(CardType.valueOf(values[4]));
 
-                if(articleService.findByArticle(article).size()<1){
+                if (articleService.findByArticle(article).size() < 1) {
                     records.add(article);
                     articleService.saveArticle(article);
                 }
@@ -62,6 +62,7 @@ public class CsvController {
         records.forEach(articleService::saveArticle);
         return true;
     }
+
     @GetMapping("import/itm")
     public boolean importCsv2() throws IOException {
 
@@ -86,14 +87,14 @@ public class CsvController {
                 item.setCardStorage(
                         cardStorageService.findByName(values[6])
                 );
-                if(values[7].length()>0) {
+                if (values[7].length() > 0) {
                     item.setCardValue(new BigDecimal(values[7]));
                 }
                 item.setComments(values[8]);
 
                 long q = Long.parseLong(values[9]);
 
-                for (int i=0; i<q; ++i){
+                for (int i = 0; i < q; ++i) {
                     StockItem item1 = new StockItem();
                     item1.setComments(item.getComments());
                     item1.setCardValue(item.getCardValue());

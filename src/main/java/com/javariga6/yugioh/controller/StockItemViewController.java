@@ -18,7 +18,7 @@ public class StockItemViewController {
     }
 
     @GetMapping("all")
-    public List<StockItemView> getAll(){
+    public List<StockItemView> getAll() {
         return stockItemViewService.getAll();
     }
 }

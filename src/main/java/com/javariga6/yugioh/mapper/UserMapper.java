@@ -4,7 +4,7 @@ import com.javariga6.yugioh.model.User;
 import com.javariga6.yugioh.model.UserDTO;
 
 public class UserMapper {
-    public static UserDTO toDTO(User user){
+    public static UserDTO toDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setEmail(user.getEmail());
