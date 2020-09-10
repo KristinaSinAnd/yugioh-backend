@@ -21,7 +21,6 @@ public class UserController {
     @PostMapping
     @RequestMapping("/register")
     public UserDTO save(@RequestBody @Valid User user) {
-        System.out.println(user);
         return userService.saveUser(user);
     }
 

@@ -26,7 +26,6 @@ public class StockItemController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public StockItem save(@RequestBody @Valid StockItem stockItem) {
-        System.out.println(stockItem);
         return stockItemService.saveStockItem(stockItem);
     }
 

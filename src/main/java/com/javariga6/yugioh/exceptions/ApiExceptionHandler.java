@@ -27,6 +27,15 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(FailedLoginException.class)
+    public ResponseEntity<ErrorResponse> handleApiException(
+            FailedLoginException ex) {
+        ErrorResponse response =
+                new ErrorResponse("error-0004",
+                        "Login Failed");
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(value = {ReferencedResourceNotFoundException.class, IdInUseException.class, BadDataInRequestException.class, ConstraintViolationException.class})
     public ResponseEntity<ErrorResponse> handleApiException(
             RuntimeException ex) {

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -47,10 +46,7 @@ class UserControllerTest {
     public ObjectMapper objectMapper;
     private static final Random RANDOM = new Random();
 
-    private User admin;
     private List<User> users;
-    private Role adminRole;
-    private Role userRole;
 
     @BeforeEach
     void setUp() {
@@ -58,19 +54,19 @@ class UserControllerTest {
         users = new LinkedList<>();
         userRepository.deleteAll();
         roleRepository.deleteAll();
-        admin = new User();
+        User admin = new User();
         admin.setName("admin");
         admin.setPassword(passwordEncoder.encode("encoded_pass"));
         admin.setName("admin_name");
         admin.setEmail("admin@email.com");
         Role _adminRole = new Role();
         _adminRole.setRole("ROLE_ADMINISTRATOR");
-        adminRole = roleRepository.save(_adminRole);
+        Role adminRole = roleRepository.save(_adminRole);
         admin.setRole(adminRole);
         userRepository.save(admin);
         Role _userRole = new Role();
         _userRole.setRole("ROLE_USER");
-        userRole = roleRepository.save(_userRole);
+        Role userRole = roleRepository.save(_userRole);
         for (int i=0; i<5; ++i){
             User user = new User();
             user.setName("user"+i);
@@ -82,7 +78,6 @@ class UserControllerTest {
             users.add(user);
         }
         objectMapper = new ObjectMapper();
-
     }
 
     @Test

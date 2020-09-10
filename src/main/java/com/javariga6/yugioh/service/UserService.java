@@ -40,7 +40,6 @@ public class UserService {
         if(userRepository.existsByEmail(user.getEmail())){
             throw new EmailInUseException();
         }
-        System.out.println(user);
         user.setPassword(
                 passwordEncoder.encode(user.getPassword())
         );

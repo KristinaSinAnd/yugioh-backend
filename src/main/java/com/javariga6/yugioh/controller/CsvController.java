@@ -37,7 +37,6 @@ public class CsvController {
     public boolean importCsv() throws IOException {
         Resource resource = new ClassPathResource("/static/articles.csv");
         File file = resource.getFile();
-        System.out.println(file.canRead());
         List<Article> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -57,7 +56,6 @@ public class CsvController {
 
 
             }
-            System.out.println(records.size());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,7 +67,6 @@ public class CsvController {
 
         Resource resource = new ClassPathResource("/static/items.csv");
         File file = resource.getFile();
-        System.out.println(file.canRead());
         List<StockItem> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -81,11 +78,7 @@ public class CsvController {
                 article.setEdition(Edition.valueOf(values[2]));
                 article.setRarity(Rarity.valueOf(values[3]));
                 article.setCardType(CardType.valueOf(values[4]));
-                if (articleService.findByArticle(article).size()<1){
-                    System.out.println(article);
-                }
                 article = articleService.findByArticle(article).get(0);
-                System.out.println(article);
 
                 StockItem item = new StockItem();
                 item.setArticle(article);
@@ -112,7 +105,7 @@ public class CsvController {
                 }
 
             }
-//            System.out.println(records.size());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
