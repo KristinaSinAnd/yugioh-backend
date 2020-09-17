@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.IdInUseException;
 import com.javariga6.yugioh.exceptions.ReferencedResourceNotFoundException;
 import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.Article;
@@ -28,6 +29,9 @@ public class StockItemService {
     public StockItem saveStockItem(StockItem stockItem) {
         if (stockItem.getArticle()==null || stockItem.getCardStorage() == null || stockItem.getArticle().getId() == null || stockItem.getCardStorage().getId() == null) {
             throw new ReferencedResourceNotFoundException();
+        }
+        if(stockItem.getId()!=null && stockItemRepository.existsById(stockItem.getId())){
+            throw new IdInUseException();
         }
         Article article = articleRepository.findById(stockItem.getArticle().getId())
                 .orElseThrow(ReferencedResourceNotFoundException::new);

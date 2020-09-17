@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javariga6.yugioh.model.*;
 import com.javariga6.yugioh.repository.RoleRepository;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,6 @@ class RoleControllerTest {
 
     @BeforeEach
     public void before() {
-        roleRepository.deleteAll();
         for (int i = 0; i < 5; ++i) {
             Role role = new Role();
             role.setRole("role_" + i);
@@ -48,6 +48,11 @@ class RoleControllerTest {
         }
         this.rolesInDB = roleRepository.findAll();
         this.objectMapper = new ObjectMapper();
+    }
+
+    @AfterEach
+    public void after(){
+        roleRepository.deleteAll();
     }
 
     @Test

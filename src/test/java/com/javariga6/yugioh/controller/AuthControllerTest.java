@@ -47,8 +47,8 @@ class AuthControllerTest {
     void setUp() {
 //        create admin and 5 users in testing database
         users = new LinkedList<>();
-        userRepository.deleteAll();
         roleRepository.deleteAll();
+        userRepository.deleteAll();
         User admin = new User();
         admin.setName("admin");
         admin.setPassword(passwordEncoder.encode("encoded_pass"));
