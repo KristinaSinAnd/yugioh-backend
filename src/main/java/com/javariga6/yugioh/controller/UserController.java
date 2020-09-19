@@ -26,8 +26,8 @@ public class UserController {
 
     @PostMapping("/admin")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public UserDTO makeUserAdmin(@RequestBody @Valid User user) {
-        return userService.makeUserAdmin(user);
+    public UserDTO makeUserAdmin(@RequestBody @Valid UserDTO userDTO) {
+        return userService.makeUserAdmin(userDTO);
     }
 
 
@@ -45,8 +45,8 @@ public class UserController {
 
     @PostMapping("/update")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public UserDTO update(@RequestBody @Valid User user) {
-        return this.userService.updateUser(user);
+    public UserDTO update(@RequestBody @Valid UserDTO userDTO) {
+        return this.userService.updateUser(userDTO);
     }
 
     @PostMapping("/password/requesttoken")

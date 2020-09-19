@@ -51,7 +51,6 @@ public class UserService {
             roleRepository.save(role);
         }
 
-
         user.setRole(role);
         user = userRepository.save(user);
         return UserMapper.toDTO(user);
@@ -86,7 +85,7 @@ public class UserService {
         return users.stream().map(UserMapper::toDTO).collect(Collectors.toList());
     }
 
-    public UserDTO updateUser(User user) {
+    public UserDTO updateUser(UserDTO user) {
         User userFromRepo = userRepository.findFirstByEmail(user.getEmail())
                 .orElseThrow(ResourceNotFoundException::new);
         if(user.getId()!=userFromRepo.getId()){
@@ -99,20 +98,20 @@ public class UserService {
                 userRepository.save(userFromRepo));
     }
 
-    public void updateThisUser(User updatedUser) {
-        User user = userRepository.getOne(securityService.getUserId());
-        user.setEmail(updatedUser.getEmail());
-        user.setName(updatedUser.getName());
-        user.setSurname(updatedUser.getSurname());
-        if (updatedUser.getPassword() != null) {
-            user.setPassword(
-                    passwordEncoder.encode(
-                            updatedUser.getPassword()
-                    )
-            );
-        }
-        userRepository.save(user);
-    }
+//    public void updateThisUser(User updatedUser) {
+//        User user = userRepository.getOne(securityService.getUserId());
+//        user.setEmail(updatedUser.getEmail());
+//        user.setName(updatedUser.getName());
+//        user.setSurname(updatedUser.getSurname());
+//        if (updatedUser.getPassword() != null) {
+//            user.setPassword(
+//                    passwordEncoder.encode(
+//                            updatedUser.getPassword()
+//                    )
+//            );
+//        }
+//        userRepository.save(user);
+//    }
 
     public void sendRecoveryToken(PassResetRequest request) {
         User user = userRepository.findFirstByEmail(request.getEmail())
@@ -142,7 +141,7 @@ public class UserService {
         passRecoveryTokenRepository.delete(token);
     }
 
-    public UserDTO makeUserAdmin(User user) {
+    public UserDTO makeUserAdmin(UserDTO user) {
         User userFromRepo = userRepository.findById(user.getId())
                 .orElseThrow(ResourceNotFoundException::new);
         Role role = roleRepository.findFirstByRole("ROLE_ADMINISTRATOR")
