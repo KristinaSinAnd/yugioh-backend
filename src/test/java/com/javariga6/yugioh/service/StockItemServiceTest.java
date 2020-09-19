@@ -1,6 +1,8 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.BadDataInRequestException;
 import com.javariga6.yugioh.exceptions.IdInUseException;
+import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
 import com.javariga6.yugioh.model.Article;
 import com.javariga6.yugioh.model.CardStorage;
 import com.javariga6.yugioh.model.Role;
@@ -63,9 +65,9 @@ class StockItemServiceTest {
         this.stockItemWithId.setCardValue(BigDecimal.valueOf(100.11));
 
         this.stockItemNotExisting.setId(99L);
-        this.stockItemWithId.setCardStorage(cardStorage);
-        this.stockItemWithId.setArticle(article);
-        this.stockItemWithId.setCardValue(BigDecimal.valueOf(100.11));
+        this.stockItemNotExisting.setCardStorage(cardStorage);
+        this.stockItemNotExisting.setArticle(article);
+        this.stockItemNotExisting.setCardValue(BigDecimal.valueOf(100.11));
 
         this.stockItemWithoutId.setCardStorage(cardStorage);
         this.stockItemWithoutId.setArticle(article);
@@ -89,17 +91,26 @@ class StockItemServiceTest {
 
     @Test
     void delete() {
-    }
+        Mockito.when(stockItemRepository.findById(99L))
+                .thenReturn(Optional.empty());
 
-    @Test
-    void findStockItemById() {
-    }
-
-    @Test
-    void findAllStockItems() {
+        Assert.assertThrows(ResourceNotFoundException.class, ()->stockItemService.delete(stockItemNotExisting));
+        Assert.assertThrows(BadDataInRequestException.class, ()->stockItemService.delete(stockItemWithoutId));
     }
 
     @Test
     void updateStockItem() {
+        Mockito.when(stockItemRepository.findById(1L))
+                .thenReturn(Optional.of(stockItemWithId));
+        Mockito.when(stockItemRepository.findById(99L))
+                .thenReturn(Optional.empty());
+        Mockito.when(stockItemRepository.save(stockItemWithId))
+                .thenReturn(stockItemWithId);
+        Mockito.when(cardStorageRepository.findById(1L))
+                .thenReturn(Optional.of(cardStorage));
+
+        Assert.assertEquals(stockItemService.updateStockItem(stockItemWithId), stockItemWithId);
+        Assert.assertThrows(ResourceNotFoundException.class, ()->stockItemService.updateStockItem(stockItemNotExisting));
+        Assert.assertThrows(BadDataInRequestException.class, ()->stockItemService.updateStockItem(stockItemWithoutId));
     }
 }

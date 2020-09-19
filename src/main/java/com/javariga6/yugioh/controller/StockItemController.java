@@ -43,10 +43,10 @@ public class StockItemController {
         stockItemService.delete(stockItem);
     }
 
-    @GetMapping("/get/id/{id}")
-    public void findStockItemById(@PathVariable Long id) {
-        stockItemService.findStockItemById(id);
-    }
+//    @GetMapping("/get/id/{id}")
+//    public void findStockItemById(@PathVariable Long id) {
+//        stockItemService.findStockItemById(id);
+//    }
 
     @GetMapping("get/all")
     public List<StockItem> findAllStockItems() {

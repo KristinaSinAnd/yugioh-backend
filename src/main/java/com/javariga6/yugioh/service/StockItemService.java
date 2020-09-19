@@ -1,5 +1,6 @@
 package com.javariga6.yugioh.service;
 
+import com.javariga6.yugioh.exceptions.BadDataInRequestException;
 import com.javariga6.yugioh.exceptions.IdInUseException;
 import com.javariga6.yugioh.exceptions.ReferencedResourceNotFoundException;
 import com.javariga6.yugioh.exceptions.ResourceNotFoundException;
@@ -44,15 +45,18 @@ public class StockItemService {
 
 
     public void delete(StockItem stockItem) {
+        if(stockItem.getId() == null){
+            throw new BadDataInRequestException();
+        }
         StockItem stockItemToDelete = stockItemRepository.findById(stockItem.getId())
                 .orElseThrow(ResourceNotFoundException::new);
         stockItemRepository.delete(stockItemToDelete);
     }
 
-    public void findStockItemById(Long id) {
-        stockItemRepository.findById(id)
-                .orElseThrow(ResourceNotFoundException::new);
-    }
+//    public void findStockItemById(Long id) {
+//        stockItemRepository.findById(id)
+//                .orElseThrow(ResourceNotFoundException::new);
+//    }
 
 
     public List<StockItem> findAllStockItems() {
@@ -61,6 +65,9 @@ public class StockItemService {
 
 
     public StockItem updateStockItem(@NotNull StockItem stockItem) {
+        if(stockItem.getId() == null || stockItem.getArticle().getId() == null || stockItem.getCardStorage().getId() == null){
+            throw new BadDataInRequestException();
+        }
         StockItem stockItemOriginal = stockItemRepository
                 .findById(stockItem.getId())
                 .orElseThrow(ResourceNotFoundException::new);

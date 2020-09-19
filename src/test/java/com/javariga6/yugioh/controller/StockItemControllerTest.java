@@ -183,48 +183,48 @@ class StockItemControllerTest {
                 .andReturn();
     }
 
-    @Test
-    @WithMockUser(roles = {"ADMINISTRATOR"})
-    void findStockItemById() throws Exception {
-        StockItem stockItem1 = new StockItem();
-        stockItem1.setArticle(testArticle);
-        stockItem1.setCardStorage(testCardStorage);
-        StockItem stockItem2 = new StockItem();
-        stockItem2.setArticle(testArticle);
-        stockItem2.setCardStorage(testCardStorage);
-        StockItem stockItem3 = new StockItem();
-        stockItem3.setArticle(testArticle);
-        stockItem3.setCardStorage(testCardStorage);
-        stockItemRepository.save(stockItem1);
-        stockItemRepository.save(stockItem2);
-        stockItemRepository.save(stockItem3);
-
-        mockMvc.perform(get ("/stockitem/get/id/"+stockItem1.getId())
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-        )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-//        Bad request, no such id in db
-        mockMvc.perform(get ("/stockitem/get/id/999")
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-        )
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andReturn();
-
-        mockMvc.perform(get ("/stockitem/get/id/abc")
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-        )
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-    }
+//    @Test
+//    @WithMockUser(roles = {"ADMINISTRATOR"})
+//    void findStockItemById() throws Exception {
+//        StockItem stockItem1 = new StockItem();
+//        stockItem1.setArticle(testArticle);
+//        stockItem1.setCardStorage(testCardStorage);
+//        StockItem stockItem2 = new StockItem();
+//        stockItem2.setArticle(testArticle);
+//        stockItem2.setCardStorage(testCardStorage);
+//        StockItem stockItem3 = new StockItem();
+//        stockItem3.setArticle(testArticle);
+//        stockItem3.setCardStorage(testCardStorage);
+//        stockItemRepository.save(stockItem1);
+//        stockItemRepository.save(stockItem2);
+//        stockItemRepository.save(stockItem3);
+//
+//        mockMvc.perform(get ("/stockitem/get/id/"+stockItem1.getId())
+//                .contentType(APPLICATION_JSON)
+//                .accept(APPLICATION_JSON)
+//        )
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andReturn();
+//
+////        Bad request, no such id in db
+//        mockMvc.perform(get ("/stockitem/get/id/999")
+//                .contentType(APPLICATION_JSON)
+//                .accept(APPLICATION_JSON)
+//        )
+//                .andDo(print())
+//                .andExpect(status().isNotFound())
+//                .andReturn();
+//
+//        mockMvc.perform(get ("/stockitem/get/id/abc")
+//                .contentType(APPLICATION_JSON)
+//                .accept(APPLICATION_JSON)
+//        )
+//                .andDo(print())
+//                .andExpect(status().isBadRequest())
+//                .andReturn();
+//
+//    }
 }
 
 
